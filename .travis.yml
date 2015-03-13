@@ -7,6 +7,6 @@ install:
  - python setup.py install
  - pip install pytest-pep8 pytest-cov python-coveralls
 script:
- - py.test --pep8 --cov threddsclient --cov-report term-missing
+ - py.test -v tests --pep8 threddsclient --cov threddsclient --cov-report term-missing
 after_success:
  - coveralls
