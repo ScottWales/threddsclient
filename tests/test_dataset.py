@@ -24,19 +24,22 @@ import pytest
 
 from threddsclient import *
 
+
 def test_unidata_sample_1():
-    xml="""
-    <dataset name="DC8 flight 1999-11-19" urlPath="SOLVE_DC8_19991119.nc">
+    xml = """
+    <dataset name="DC8 flight 1999-11-19"
+    urlPath="SOLVE_DC8_19991119.nc">
       <serviceName>agg</serviceName>
     </dataset>
     """
     soup = BSoup(xml, 'xml')
-    d= Dataset(soup.dataset)
+    d = Dataset(soup.dataset)
     assert d.name == "DC8 flight 1999-11-19"
-    assert d.url  == "SOLVE_DC8_19991119.nc"
+    assert d.url == "SOLVE_DC8_19991119.nc"
+
 
 def test_unidata_sample_2():
-    xml="""
+    xml = """
     <dataset ID="SOLVE_DC8_19991119" name="DC8 flight 1999-11-19, 1 min merge">
       <metadata xlink:href="http://dataportal.ucar.edu/metadata/tracep_dc8_1min_05"/>
       <access serviceName="disk" urlPath="SOLVE_DC8_19991119.nc"/>
@@ -45,11 +48,12 @@ def test_unidata_sample_2():
     soup = BSoup(xml, 'xml')
     Dataset(soup.dataset)
 
+
 def test_unidata_sample_3():
-    xml="""
-    <dataset name="Station Data"> 
+    xml = """
+    <dataset name="Station Data">
       <dataset name="Metar data" urlPath="cgi-bin/MetarServer.pl?format=qc" />
-      <dataset name="Level 3 Radar data" urlPath="cgi-bin/RadarServer.pl?format=qc" /> 
+      <dataset name="Level 3 Radar data" urlPath="cgi-bin/RadarServer.pl?format=qc" />
       <dataset name="Alias to SOLVE dataset" alias="SOLVE_DC8_19991119"/>
     </dataset>
     """

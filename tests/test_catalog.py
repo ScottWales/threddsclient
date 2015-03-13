@@ -23,12 +23,15 @@ import pytest
 
 from threddsclient import *
 
+
 def test_tpac():
     cat = readUrl('http://portal.sf.utas.edu.au/thredds/catalog.xml')
+
 
 def test_invalid_url():
     with pytest.raises(requests.ConnectionError):
         cat = readUrl('http://example.invalid')
+
 
 def test_null():
     xml = """
@@ -36,13 +39,15 @@ def test_null():
     with pytest.raises(ValueError):
         cat = readXml(xml, 'http://example.test')
 
+
 def test_empty():
     xml = """
     <catalog></catalog>
     """
     cat = readXml(xml, 'http://example.test')
     assert len(cat.references) == 0
-    assert len(cat.datasets)   == 0
+    assert len(cat.datasets) == 0
+
 
 def test_ref():
     xml = """
@@ -50,7 +55,8 @@ def test_ref():
     """
     cat = readXml(xml, 'http://example.test')
     assert len(cat.references) == 1
-    assert len(cat.datasets)   == 0
+    assert len(cat.datasets) == 0
+
 
 def test_data():
     xml = """
@@ -58,7 +64,8 @@ def test_data():
     """
     cat = readXml(xml, 'http://example.test')
     assert len(cat.references) == 0
-    assert len(cat.datasets)   == 1
+    assert len(cat.datasets) == 1
+
 
 def test_unidata_sample():
     xml = """
@@ -70,5 +77,5 @@ def test_unidata_sample():
     </catalog>
     """
     cat = readXml(xml, 'http://example.test/catalog.xml')
-    d   = cat.datasets[0]
+    d = cat.datasets[0]
     assert d.name == "SAGE III Ozone Loss"
