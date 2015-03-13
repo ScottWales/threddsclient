@@ -20,5 +20,6 @@ setup(name             = 'threddsclient',
       install_requires =
       ['requests',
        'beautifulsoup4',
+       'lxml',
        ],
       )
