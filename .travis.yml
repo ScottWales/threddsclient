@@ -3,8 +3,9 @@ python:
   - "2.6"
   - "2.7"
 install:
+ - apt-get install python-lxml
  - python setup.py install
- - pip install lxml pytest-pep8 pytest-cov python-coveralls
+ - pip install pytest-pep8 pytest-cov python-coveralls
 script:
  - py.test --pep8 --cov threddsclient --cov-report term-missing
 after_success:
