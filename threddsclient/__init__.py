@@ -19,3 +19,4 @@ limitations under the License.
 """
 
 from .thredds import *
+from .catalog import *
