@@ -1,5 +1,7 @@
 Thredds Client for Python
 =========================
+[![Build Status](https://travis-ci.org/ScottWales/threddsclient.svg?branch=master)](https://travis-ci.org/ScottWales/threddsclient)
+[![Coverage Status](https://coveralls.io/repos/ScottWales/threddsclient/badge.svg)](https://coveralls.io/r/ScottWales/threddsclient)
 
 Start reading a catalogue
 
