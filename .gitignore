@@ -1,3 +1,5 @@
-*.egg-info
 *.swp
+*.pyc
+/dist
+/*.egg-info
 __pycache__
