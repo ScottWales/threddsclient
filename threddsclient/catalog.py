@@ -21,10 +21,9 @@ limitations under the License.
 
 from bs4 import BeautifulSoup as BSoup
 import requests
-import pytest
 import urlparse
 
-from .thredds import *
+from .nodes import *
 
 def readUrl(url, **kwargs):
     """
