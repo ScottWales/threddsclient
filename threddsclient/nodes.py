@@ -36,7 +36,7 @@ class Node:
         self.modified = None
 
     def __repr__(self):
-        return "<Node name: {0.name}, content type: (0.content_type)>".format(self)
+        return "<Node name: {0.name}, content type: {0.content_type}>".format(self)
 
 
 class Service(Node):
@@ -69,16 +69,23 @@ class Reference(Node):
 
 class Dataset(Node):
     "A reference to a data file"
-    def __init__(self, soup):
+    def __init__(self, soup, services=None):
         Node.__init__(self, soup)
+        self.services = services
         self.url = soup.get('urlPath')
         self.content_type = "application/netcdf"
         self.modified = self._modified(soup)
         self.bytes = self._bytes(soup)
+        self.service_name = self._service_name(soup)
         
         self.children = [Dataset(d) for d in
                          soup.find_all('dataset', recursive=False)]
 
+    def fileurl(self):
+        for service in self.services[0].children:
+            if service.serviceType == "HTTPServer":
+                return urlparse.urljoin(service.url, self.url)
+        
     @staticmethod
     def _modified(soup):
         modified = None
@@ -98,6 +105,18 @@ class Dataset(Node):
             except:
                 logger.exception("dataset size conversion failed")
         return size
+
+    @staticmethod
+    def _service_name(soup):
+        service_name = None
+        try:
+            service_tag = soup.servicename
+            if service_tag is None:
+                service_tag = soup.metadata.servicename
+            service_name = service_tag.text
+        except:
+            logger.exception("dataset has no service_name")
+        return service_name
 
     
 

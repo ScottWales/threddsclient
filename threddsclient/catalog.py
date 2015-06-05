@@ -96,10 +96,16 @@ def readXml(xml, baseurl, skip=None):
             logger.debug("Skipping dataset with no urlPath.  Name: %s" % name)
             continue
         else:
-            catalog.datasets.append( Dataset(ds) )
+            catalog.datasets.append( Dataset(ds, catalog.services) )
 
     return catalog
 
+def download_urls(url):
+    catalog = readUrl(url)
+    urls = []
+    for dataset in catalog.datasets:
+        urls.append(dataset.fileurl())
+    return urls
 
 class Catalog:
     "A Thredds catalog entry"
