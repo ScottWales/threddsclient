@@ -7,11 +7,15 @@ def readme():
     with open('README.md') as f:
         return f.read()
 
+def changes():
+    with open('CHANGES.md') as f:
+        return f.read()
+
 
 setup(name             = 'threddsclient',
-      version          = '0.1.0',
+      version          = '0.1.1',
       description      = 'Thredds catalog client',
-      long_description = readme(),
+      long_description = readme() + '/n/n' + changes(),
       author           = 'Scott Wales',
       author_email     = 'scott.wales@unimelb.edu.au',
       license          = 'Apache 2.0',
@@ -21,5 +25,6 @@ setup(name             = 'threddsclient',
       ['requests',
        'beautifulsoup4',
        'lxml',
+       'pytest',
        ],
       )
