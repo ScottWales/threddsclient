@@ -21,12 +21,23 @@ limitations under the License.
 
 from bs4 import BeautifulSoup as BSoup
 import urlparse
+from .utils import size_in_bytes
+
+import logging
+logger = logging.getLogger(__name__)
 
 class Node:
     "Common items to all nodes"
     def __init__(self, soup):
         self.name = soup.get('name')
         self.ID = soup.get('ID')
+        self._content_type = None
+
+    def content_type(self):
+        return self._content_type
+
+    def __repr__(self):
+        return "<Node name: {0.name}, content type: {0._content_type}>".format(self)
 
 
 class Service(Node):
@@ -36,6 +47,7 @@ class Service(Node):
         self.base = soup.get('base')
         self.url = urlparse.urljoin(baseurl, self.base)
         self.serviceType = soup.get('serviceType')
+        self._content_type = "application/service"
 
         self.children = [Service(s, baseurl) for s in
                          soup.find_all('service', recursive=False)]
@@ -49,6 +61,7 @@ class Reference(Node):
         self.name = self.title
         self.href = soup.get('xlink:href')
         self.url = urlparse.urljoin(baseurl, self.href)
+        self._content_type = "application/directory"
 
     def follow(self):
         from .catalog import readUrl
@@ -60,6 +73,35 @@ class Dataset(Node):
     def __init__(self, soup):
         Node.__init__(self, soup)
         self.url = soup.get('urlPath')
-
+        self._content_type = "application/netcdf"
+        
+        self.modified = self._modified(soup)
+        self.bytes = self._bytes(soup)
+        
         self.children = [Dataset(d) for d in
                          soup.find_all('dataset', recursive=False)]
+
+    @staticmethod
+    def _modified(soup):
+        modified = None
+        if soup.date:
+            if soup.date.get('type') == 'modified':
+                modified = soup.date.text
+        return modified
+    
+    @staticmethod
+    def _bytes(soup):
+        size = None
+        if soup.dataSize:
+            try:
+                datasize = float(soup.dataSize.text)
+                units = soup.dataSize.get('units')
+                size = size_in_bytes(datasize, units)
+            except:
+                logger.exception("dataset size conversion failed")
+        return size
+
+    
+
+
+

@@ -25,6 +25,8 @@ import urlparse
 
 from .nodes import Service, Reference, Dataset
 
+import logging
+logger = logging.getLogger(__name__)
 
 def readUrl(url, **kwargs):
     """

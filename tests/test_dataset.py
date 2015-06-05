@@ -60,3 +60,23 @@ def test_unidata_sample_3():
     soup = BSoup(xml, 'xml')
     d = Dataset(soup.dataset)
     assert len(d.children) == 3
+
+def test_noaa_sample_1():
+    xml = """
+    <dataset name="mslp.1979.nc" ID="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1979.nc" urlPath="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1979.nc">
+      <dataSize units="Mbytes">7.685</dataSize>
+      <date type="modified">2011-06-14T00:17:11Z</date>
+      <metadata inherited="true">
+        <serviceName>all</serviceName>
+        <dataType>GRID</dataType>
+      </metadata>
+    </dataset>
+    """
+    soup = BSoup(xml, 'xml')
+    d = Dataset(soup.dataset)
+    assert d.name == "mslp.1979.nc"
+    assert d.ID == "Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1979.nc"
+    assert d.url == "Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1979.nc"
+    assert d.bytes == 7685000
+    assert d.modified == "2011-06-14T00:17:11Z"
+    
