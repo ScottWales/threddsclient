@@ -23,7 +23,7 @@ from bs4 import BeautifulSoup as BSoup
 import requests
 import urlparse
 
-from .nodes import *
+from .nodes import Service, Reference, Dataset
 
 
 def readUrl(url, **kwargs):
@@ -39,7 +39,7 @@ def readUrl(url, **kwargs):
     :raises requests.ConnectionError: if unable to connect to the URL
     """
     req = requests.get(url, **kwargs)
-    readXml(req.text, url)
+    return readXml(req.text, url)
 
 
 def readXml(xml, baseurl):

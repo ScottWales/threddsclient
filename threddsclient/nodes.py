@@ -22,7 +22,6 @@ limitations under the License.
 from bs4 import BeautifulSoup as BSoup
 import urlparse
 
-
 class Node:
     "Common items to all nodes"
     def __init__(self, soup):
@@ -46,11 +45,14 @@ class Reference(Node):
     "A reference to a different Thredds catalog"
     def __init__(self, soup, baseurl):
         Node.__init__(self, soup)
-        self.href = soup.get('href')
+        self.title = soup.get('xlink:title')
+        self.name = self.title
+        self.href = soup.get('xlink:href')
         self.url = urlparse.urljoin(baseurl, self.href)
 
     def follow(self):
-        return Catalog.readUrl(self.url)
+        from .catalog import readUrl
+        return readUrl(self.url)
 
 
 class Dataset(Node):
