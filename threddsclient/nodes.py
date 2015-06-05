@@ -31,9 +31,12 @@ class Node:
     def __init__(self, soup):
         self.name = soup.get('name')
         self.ID = soup.get('ID')
+        self.content_type = None
+        self.bytes = None
+        self.modified = None
 
     def __repr__(self):
-        return "<Node name: {0.name}>".format(self)
+        return "<Node name: {0.name}, content type: (0.content_type)>".format(self)
 
 
 class Service(Node):
@@ -43,6 +46,7 @@ class Service(Node):
         self.base = soup.get('base')
         self.url = urlparse.urljoin(baseurl, self.base)
         self.serviceType = soup.get('serviceType')
+        self.content_type = "application/service"
 
         self.children = [Service(s, baseurl) for s in
                          soup.find_all('service', recursive=False)]
@@ -56,6 +60,7 @@ class Reference(Node):
         self.name = self.title
         self.href = soup.get('xlink:href')
         self.url = urlparse.urljoin(baseurl, self.href)
+        self.content_type = "application/directory"
 
     def follow(self):
         from .catalog import readUrl
@@ -67,6 +72,7 @@ class Dataset(Node):
     def __init__(self, soup):
         Node.__init__(self, soup)
         self.url = soup.get('urlPath')
+        self.content_type = "application/netcdf"
         self.modified = self._modified(soup)
         self.bytes = self._bytes(soup)
         

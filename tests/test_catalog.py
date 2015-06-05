@@ -51,7 +51,7 @@ def test_empty():
 
 def test_ref():
     xml = """
-    <catalog><catalogRef name='' ID='foo' /></catalog>
+    <catalog><catalogRef name='' ID='foo' xlink:title='foo' /></catalog>
     """
     cat = readXml(xml, 'http://example.test')
     assert len(cat.references) == 1
@@ -60,7 +60,7 @@ def test_ref():
 
 def test_data():
     xml = """
-    <catalog><dataset name='' ID='foo' /></catalog>
+    <catalog><dataset name='' ID='foo' urlPath='' /></catalog>
     """
     cat = readXml(xml, 'http://example.test')
     assert len(cat.references) == 0

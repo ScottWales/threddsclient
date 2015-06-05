@@ -22,13 +22,16 @@ limitations under the License.
 from bs4 import BeautifulSoup as BSoup
 import requests
 import urlparse
+import re
 
 from .nodes import Service, Reference, Dataset
 
 import logging
 logger = logging.getLogger(__name__)
 
-def readUrl(url, **kwargs):
+SKIPS = [".*files.*", ".*Individual Files.*", ".*File_Access.*", ".*Forecast Model Run.*", ".*Constant Forecast Offset.*", ".*Constant Forecast Date.*", "\..*"]
+
+def readUrl(url, skip=None, **kwargs):
     """
     Create a Catalog from a Thredds catalog link
 
@@ -44,12 +47,13 @@ def readUrl(url, **kwargs):
     return readXml(req.text, url)
 
 
-def readXml(xml, baseurl):
+def readXml(xml, baseurl, skip=None):
     """
     Create a Catalog from a XML string
 
     :param str xml:     XML code for a Thredds catalog
     :param str baseurl: URL base to use for catalog links
+    :param str skip:        list of dataset names and/or a catalogRef titles.  Python regex supported.
     :rtype Catalog
 
     :raises ValueError: if the XML is not a Thredds catalog
@@ -60,16 +64,39 @@ def readXml(xml, baseurl):
     except AttributeError:
         raise ValueError("Does not appear to be a Thredds catalog")
 
+    # Skip these dataset links, such as a list of files
+    # ie. "files/"
+    if skip is None:
+        skip = SKIPS
+    skip = map(lambda x: re.compile(x), skip)
+
     catalog = Catalog()
     catalog.name = soup.get('name')
 
     # Collect references and datasets
     catalog.services = [Service(x, baseurl) for x in
                         soup.find_all('service', recursive=False)]
-    catalog.references = [Reference(x, baseurl) for x in
-                          soup.find_all('catalogRef', recursive=False)]
-    catalog.datasets = [Dataset(x) for x in
-                        soup.find_all('dataset', recursive=False)]
+
+    catalog.references = []
+    for ref in soup.find_all('catalogRef', recursive=True):
+        title = ref.get('xlink:title', '')
+        if any([x.match(title) for x in skip]):
+            logger.info("Skipping catalogRef based on 'skips'.  Title: %s" % title)
+            continue
+        else:
+            catalog.references.append(Reference(ref, baseurl))
+
+    catalog.datasets = []
+    for ds in soup.find_all('dataset', recursive=True):    
+        name = ds.get("name")
+        if any([x.match(name) for x in skip]):
+            logger.info("Skipping dataset based on 'skips'.  Name: %s" % name)
+            continue
+        elif ds.get('urlPath') is None:
+            logger.debug("Skipping dataset with no urlPath.  Name: %s" % name)
+            continue
+        else:
+            catalog.datasets.append( Dataset(ds) )
 
     return catalog
 

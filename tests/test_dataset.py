@@ -79,4 +79,5 @@ def test_noaa_sample_1():
     assert d.url == "Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1979.nc"
     assert d.bytes == 7685000
     assert d.modified == "2011-06-14T00:17:11Z"
+    assert d.content_type == "application/netcdf"
     
