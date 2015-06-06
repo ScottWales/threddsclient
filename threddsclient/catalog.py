@@ -100,7 +100,7 @@ def readXml(xml, baseurl, skip=None):
 
     return catalog
 
-def download_urls(url):
+def download_urls(url, recursive=False):
     catalog = readUrl(url)
     urls = []
     for dataset in catalog.datasets:
