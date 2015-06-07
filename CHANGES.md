@@ -1,6 +1,12 @@
 Changes
 -------
 
+### 0.2.0 (2015-06-08)
+
+* Refactored
+* using CollectionDataset
+* added catalog.download_urls()
+
 ### 0.1.1 (2015-06-05)
 
 * Fixed catalog generation.

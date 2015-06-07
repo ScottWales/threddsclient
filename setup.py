@@ -13,11 +13,10 @@ def changes():
 
 
 setup(name             = 'threddsclient',
-      version          = '0.1.1',
+      version          = '0.2.0',
       description      = 'Thredds catalog client',
       long_description = readme() + '/n/n' + changes(),
-      author           = 'Scott Wales',
-      author_email     = 'scott.wales@unimelb.edu.au',
+      author	       = 'Birdhouse',
       license          = 'Apache 2.0',
       packages         = ['threddsclient'],
       zip_safe         = False,
