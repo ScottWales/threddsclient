@@ -64,15 +64,16 @@ def read_xml(xml, baseurl, skip=None):
     except AttributeError:
         raise ValueError("Does not appear to be a Thredds catalog")
 
-    catalog = Catalog()
+    catalog = Catalog(baseurl)
     catalog.name = soup.get('name')
-    
+       
     skip = skip_pattern(skip)
-
+    
     # Collect datasets
-    catalog.services = find_services(soup, baseurl)
-    catalog.references = find_references(soup, baseurl, skip)
-    catalog.datasets = find_datasets(soup, baseurl, catalog, skip)
+    catalog.services = find_services(soup, catalog)
+    catalog.references = find_references(soup, catalog, skip)
+    catalog.datasets = find_datasets(soup, catalog, skip)
+    
     return catalog
 
 def skip_pattern(skip=None):
@@ -83,10 +84,10 @@ def skip_pattern(skip=None):
     skip = map(lambda x: re.compile(x), skip)
     return skip
 
-def find_services(soup, baseurl):
-    return [Service(x, baseurl) for x in soup.find_all('service', recursive=False)]
+def find_services(soup, catalog):
+    return [Service(x, catalog) for x in soup.find_all('service', recursive=False)]
 
-def find_references(soup, baseurl, skip):
+def find_references(soup, catalog, skip):
     references = []
     for ref in soup.find_all('catalogRef', recursive=False):
         title = ref.get('xlink:title', '')
@@ -94,10 +95,10 @@ def find_references(soup, baseurl, skip):
             logger.info("Skipping catalogRef based on 'skips'.  Title: {0}".format(title))
             continue
         else:
-            references.append(CatalogRef(ref, baseurl))
+            references.append(CatalogRef(ref, catalog))
     return references
 
-def find_datasets(soup, baseurl, catalog, skip):
+def find_datasets(soup, catalog, skip):
     datasets = []
     for ds in soup.find_all('dataset', recursive=False):    
         name = ds.get("name")
@@ -105,9 +106,9 @@ def find_datasets(soup, baseurl, catalog, skip):
             logger.info("Skipping dataset based on 'skips'.  Name: {0}".format(name))
             continue
         elif ds.get('urlPath') is None:
-            datasets.append( CollectionDataset(ds, baseurl, catalog, skip) )
+            datasets.append( CollectionDataset(ds, catalog, skip) )
         else:
-            datasets.append( DirectDataset(ds, baseurl, catalog) )
+            datasets.append( DirectDataset(ds, catalog) )
     return datasets
 
 def download_urls(url, recursive=False):
@@ -133,7 +134,8 @@ def flat_references(datasets):
 
 class Catalog:
     "A Thredds catalog entry"
-    def __init__(self):
+    def __init__(self, url):
+        self.url = url
         self.name = ""
         self.services = []
         self.references = []

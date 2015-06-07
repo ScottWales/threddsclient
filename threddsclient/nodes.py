@@ -32,7 +32,8 @@ class Node:
     """
     Common items to all nodes
     """
-    def __init__(self, soup):
+    def __init__(self, soup, catalog):
+        self.catalog = catalog
         self.name = soup.get('name')
         self.content_type = None
         self.bytes = None
@@ -46,14 +47,14 @@ class Service(Node):
     """
     A Thredds service
     """
-    def __init__(self, soup, baseurl):
-        Node.__init__(self, soup)
+    def __init__(self, soup, catalog):
+        Node.__init__(self, soup, catalog)
         self.base = soup.get('base')
-        self.url = urlparse.urljoin(baseurl, self.base)
+        self.url = urlparse.urljoin(self.catalog.url, self.base)
         self.serviceType = soup.get('serviceType')
         self.content_type = "application/service"
 
-        self.children = [Service(s, baseurl) for s in
+        self.children = [Service(s, self.catalog) for s in
                          soup.find_all('service', recursive=False)]
 
 
@@ -61,12 +62,12 @@ class CatalogRef(Node):
     """
     A reference to a different Thredds catalog
     """
-    def __init__(self, soup, baseurl):
-        Node.__init__(self, soup)
+    def __init__(self, soup, catalog):
+        Node.__init__(self, soup, catalog)
         self.title = soup.get('xlink:title')
         self.name = self.title
         self.href = soup.get('xlink:href')
-        self.url = urlparse.urljoin(baseurl, self.href)
+        self.url = urlparse.urljoin(self.catalog.url, self.href)
         self.content_type = "application/directory"
 
     def follow(self):
@@ -77,10 +78,10 @@ class Dataset(Node):
     """
     Abstract dataset class
     """
-    def __init__(self, soup, baseurl):
-        Node.__init__(self, soup)
+    def __init__(self, soup, catalog):
+        Node.__init__(self, soup, catalog)
         self.ID = soup.get('ID')
-        self.url = "{0}?dataset={1}".format(baseurl, self.ID)
+        self.url = "{0}?dataset={1}".format(self.catalog.url, self.ID)
 
     def is_collection(self):
         return False
@@ -89,13 +90,13 @@ class CollectionDataset(Dataset):
     """
     A container for other datasets
     """
-    def __init__(self, soup, baseurl, catalog, skip):
-        Dataset.__init__(self, soup, baseurl)
+    def __init__(self, soup, catalog, skip):
+        Dataset.__init__(self, soup, catalog)
         self.content_type = "application/directory"
         from .catalog import find_datasets
-        self.datasets = find_datasets(soup, baseurl, catalog, skip)
+        self.datasets = find_datasets(soup, self.catalog, skip)
         from .catalog import find_references
-        self.references = find_references(soup, baseurl, skip)
+        self.references = find_references(soup, self.catalog, skip)
 
     def is_collection(self):
         return True
@@ -104,9 +105,8 @@ class DirectDataset(Dataset):
     """
     A reference to a data file
     """
-    def __init__(self, soup, baseurl, catalog):
-        Dataset.__init__(self, soup, baseurl)
-        self.catalog = catalog
+    def __init__(self, soup, catalog):
+        Dataset.__init__(self, soup, catalog)
         self.url_path = soup.get('urlPath')
         self.content_type = "application/netcdf"
         self.modified = self._modified(soup)
