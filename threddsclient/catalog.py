@@ -24,7 +24,7 @@ import requests
 import urlparse
 import re
 
-from .nodes import Service, Reference, Dataset
+from .nodes import Service, CatalogRef, CollectionDataset, DirectDataset
 
 import logging
 logger = logging.getLogger(__name__)
@@ -64,48 +64,72 @@ def read_xml(xml, baseurl, skip=None):
     except AttributeError:
         raise ValueError("Does not appear to be a Thredds catalog")
 
+    catalog = Catalog()
+    catalog.name = soup.get('name')
+    
+    skip = skip_pattern(skip)
+
+    # Collect datasets
+    catalog.services = find_services(soup, baseurl)
+    catalog.references = find_references(soup, baseurl, skip)
+    catalog.datasets = find_datasets(soup, baseurl, catalog, skip)
+    return catalog
+
+def skip_pattern(skip=None):
     # Skip these dataset links, such as a list of files
     # ie. "files/"
     if skip is None:
         skip = SKIPS
     skip = map(lambda x: re.compile(x), skip)
+    return skip
 
-    catalog = Catalog()
-    catalog.name = soup.get('name')
+def find_services(soup, baseurl):
+    return [Service(x, baseurl) for x in soup.find_all('service', recursive=False)]
 
-    # Collect references and datasets
-    catalog.services = [Service(x, baseurl) for x in
-                        soup.find_all('service', recursive=False)]
-
-    catalog.references = []
-    for ref in soup.find_all('catalogRef', recursive=True):
+def find_references(soup, baseurl, skip):
+    references = []
+    for ref in soup.find_all('catalogRef', recursive=False):
         title = ref.get('xlink:title', '')
         if any([x.match(title) for x in skip]):
-            logger.info("Skipping catalogRef based on 'skips'.  Title: %s" % title)
+            logger.info("Skipping catalogRef based on 'skips'.  Title: {0}".format(title))
             continue
         else:
-            catalog.references.append(Reference(ref, baseurl))
+            references.append(CatalogRef(ref, baseurl))
+    return references
 
-    catalog.datasets = []
-    for ds in soup.find_all('dataset', recursive=True):    
+def find_datasets(soup, baseurl, catalog, skip):
+    datasets = []
+    for ds in soup.find_all('dataset', recursive=False):    
         name = ds.get("name")
         if any([x.match(name) for x in skip]):
-            logger.info("Skipping dataset based on 'skips'.  Name: %s" % name)
+            logger.info("Skipping dataset based on 'skips'.  Name: {0}".format(name))
             continue
         elif ds.get('urlPath') is None:
-            logger.debug("Skipping dataset with no urlPath.  Name: %s" % name)
-            continue
+            datasets.append( CollectionDataset(ds, baseurl, catalog, skip) )
         else:
-            catalog.datasets.append( Dataset(ds, catalog.services) )
-
-    return catalog
+            datasets.append( DirectDataset(ds, baseurl, catalog) )
+    return datasets
 
 def download_urls(url, recursive=False):
     catalog = read_url(url)
-    urls = []
-    for dataset in catalog.datasets:
-        urls.append(dataset.fileurl())
-    return urls
+    return catalog.download_urls(recursive)
+
+def flat_datasets(datasets):
+    flat_ds = []
+    for ds in datasets:
+        if ds.is_collection():
+            flat_ds.extend(flat_datasets(ds.datasets))
+        else:
+            flat_ds.append(ds)
+    return flat_ds
+
+def flat_references(datasets):
+    flat_refs = []
+    for ds in datasets:
+        if ds.is_collection():
+            flat_refs.extend(ds.references)
+            flat_refs.extend(flat_references(ds.datasets))
+    return flat_refs
 
 class Catalog:
     "A Thredds catalog entry"
@@ -114,3 +138,18 @@ class Catalog:
         self.services = []
         self.references = []
         self.datasets = []
+
+    def flat_datasets(self):
+        return flat_datasets(self.datasets)
+
+    def flat_references(self):
+        flat_refs = []
+        flat_refs.extend(self.references)
+        flat_refs.extend(flat_references(self.datasets))
+        return flat_refs
+
+    def download_urls(self, recursive=False):
+        urls = []
+        for dataset in self.flat_datasets():
+            urls.append(dataset.fileurl())
+        return urls

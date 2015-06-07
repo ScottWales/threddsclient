@@ -2,6 +2,8 @@
 """
 A Python view of a Thredds data server
 
+See thredds catalog description at: http://www.unidata.ucar.edu/software/thredds/current/tds/tutorial/CatalogPrimer.html
+
 author: Scott Wales <scott.wales@unimelb.edu.au>
 
 Copyright 2015 ARC Centre of Excellence for Climate Systems Science
@@ -27,10 +29,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Node:
-    "Common items to all nodes"
+    """
+    Common items to all nodes
+    """
     def __init__(self, soup):
         self.name = soup.get('name')
-        self.ID = soup.get('ID')
         self.content_type = None
         self.bytes = None
         self.modified = None
@@ -40,7 +43,9 @@ class Node:
 
 
 class Service(Node):
-    "A Thredds service"
+    """
+    A Thredds service
+    """
     def __init__(self, soup, baseurl):
         Node.__init__(self, soup)
         self.base = soup.get('base')
@@ -52,8 +57,10 @@ class Service(Node):
                          soup.find_all('service', recursive=False)]
 
 
-class Reference(Node):
-    "A reference to a different Thredds catalog"
+class CatalogRef(Node):
+    """
+    A reference to a different Thredds catalog
+    """
     def __init__(self, soup, baseurl):
         Node.__init__(self, soup)
         self.title = soup.get('xlink:title')
@@ -66,25 +73,50 @@ class Reference(Node):
         from .catalog import read_url
         return read_url(self.url)
 
-
 class Dataset(Node):
-    "A reference to a data file"
-    def __init__(self, soup, services=None):
+    """
+    Abstract dataset class
+    """
+    def __init__(self, soup, baseurl):
         Node.__init__(self, soup)
-        self.services = services
-        self.url = soup.get('urlPath')
+        self.ID = soup.get('ID')
+        self.url = "{0}?dataset={1}".format(baseurl, self.ID)
+
+    def is_collection(self):
+        return False
+    
+class CollectionDataset(Dataset):
+    """
+    A container for other datasets
+    """
+    def __init__(self, soup, baseurl, catalog, skip):
+        Dataset.__init__(self, soup, baseurl)
+        self.content_type = "application/directory"
+        from .catalog import find_datasets
+        self.datasets = find_datasets(soup, baseurl, catalog, skip)
+        from .catalog import find_references
+        self.references = find_references(soup, baseurl, skip)
+
+    def is_collection(self):
+        return True
+        
+class DirectDataset(Dataset):
+    """
+    A reference to a data file
+    """
+    def __init__(self, soup, baseurl, catalog):
+        Dataset.__init__(self, soup, baseurl)
+        self.catalog = catalog
+        self.url_path = soup.get('urlPath')
         self.content_type = "application/netcdf"
         self.modified = self._modified(soup)
         self.bytes = self._bytes(soup)
         self.service_name = self._service_name(soup)
-        
-        self.children = [Dataset(d) for d in
-                         soup.find_all('dataset', recursive=False)]
 
     def fileurl(self):
-        for service in self.services[0].children:
+        for service in self.catalog.services[0].children:
             if service.serviceType == "HTTPServer":
-                return urlparse.urljoin(service.url, self.url)
+                return urlparse.urljoin(service.url, self.url_path)
         
     @staticmethod
     def _modified(soup):
