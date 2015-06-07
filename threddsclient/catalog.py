@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 
 SKIPS = [".*files.*", ".*Individual Files.*", ".*File_Access.*", ".*Forecast Model Run.*", ".*Constant Forecast Offset.*", ".*Constant Forecast Date.*", "\..*"]
 
-def readUrl(url, skip=None, **kwargs):
+def read_url(url, skip=None, **kwargs):
     """
     Create a Catalog from a Thredds catalog link
 
@@ -44,10 +44,10 @@ def readUrl(url, skip=None, **kwargs):
     :raises requests.ConnectionError: if unable to connect to the URL
     """
     req = requests.get(url, **kwargs)
-    return readXml(req.text, url)
+    return read_xml(req.text, url)
 
 
-def readXml(xml, baseurl, skip=None):
+def read_xml(xml, baseurl, skip=None):
     """
     Create a Catalog from a XML string
 
@@ -101,7 +101,7 @@ def readXml(xml, baseurl, skip=None):
     return catalog
 
 def download_urls(url, recursive=False):
-    catalog = readUrl(url)
+    catalog = read_url(url)
     urls = []
     for dataset in catalog.datasets:
         urls.append(dataset.fileurl())

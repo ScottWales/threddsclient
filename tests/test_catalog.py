@@ -25,26 +25,26 @@ from threddsclient import *
 
 
 def test_tpac():
-    cat = readUrl('http://portal.sf.utas.edu.au/thredds/catalog.xml')
+    cat = read_url('http://portal.sf.utas.edu.au/thredds/catalog.xml')
 
 
 def test_invalid_url():
     with pytest.raises(requests.ConnectionError):
-        cat = readUrl('http://example.invalid')
+        cat = read_url('http://example.invalid')
 
 
 def test_null():
     xml = """
     """
     with pytest.raises(ValueError):
-        cat = readXml(xml, 'http://example.test')
+        cat = read_xml(xml, 'http://example.test')
 
 
 def test_empty():
     xml = """
     <catalog></catalog>
     """
-    cat = readXml(xml, 'http://example.test')
+    cat = read_xml(xml, 'http://example.test')
     assert len(cat.references) == 0
     assert len(cat.datasets) == 0
 
@@ -53,7 +53,7 @@ def test_ref():
     xml = """
     <catalog><catalogRef name='' ID='foo' xlink:title='foo' /></catalog>
     """
-    cat = readXml(xml, 'http://example.test')
+    cat = read_xml(xml, 'http://example.test')
     assert len(cat.references) == 1
     assert len(cat.datasets) == 0
 
@@ -62,7 +62,7 @@ def test_data():
     xml = """
     <catalog><dataset name='' ID='foo' urlPath='' /></catalog>
     """
-    cat = readXml(xml, 'http://example.test')
+    cat = read_xml(xml, 'http://example.test')
     assert len(cat.references) == 0
     assert len(cat.datasets) == 1
 
@@ -76,6 +76,6 @@ def test_unidata_sample():
       </dataset>
     </catalog>
     """
-    cat = readXml(xml, 'http://example.test/catalog.xml')
+    cat = read_xml(xml, 'http://example.test/catalog.xml')
     d = cat.datasets[0]
     assert d.name == "SAGE III Ozone Loss"

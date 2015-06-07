@@ -7,7 +7,7 @@ Start reading a catalogue
 
 ```python
     import threddsclient
-    c = threddsclient.readUrl('http://example.com/thredds/catalog.xml')
+    c = threddsclient.read_url('http://example.com/thredds/catalog.xml')
 ```
 
 Get a list of links to other catalogues & follow them

@@ -63,8 +63,8 @@ class Reference(Node):
         self.content_type = "application/directory"
 
     def follow(self):
-        from .catalog import readUrl
-        return readUrl(self.url)
+        from .catalog import read_url
+        return read_url(self.url)
 
 
 class Dataset(Node):
