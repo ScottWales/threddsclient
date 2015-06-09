@@ -79,3 +79,28 @@ def test_unidata_sample():
     cat = read_xml(xml, 'http://example.test/catalog.xml')
     d = cat.datasets[0]
     assert d.name == "SAGE III Ozone Loss"
+
+
+def test_noaa_sample():
+    xml = """
+    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" name="THREDDS PSD Test Catalog" version="1.0.1">
+      <service name="all" serviceType="Compound" base="">
+        <service name="odap" serviceType="OPENDAP" base="/psd/thredds/dodsC/" />
+        <service name="http" serviceType="HTTPServer" base="/psd/thredds/fileServer/" />
+        <service name="wcs" serviceType="WCS" base="/psd/thredds/wcs/" />
+        <service name="wms" serviceType="WMS" base="/psd/thredds/wms/" />
+      </service>
+      <catalogRef name="" xlink:href="/psd/thredds/catalog/Datasets/catalog.xml" xlink:title="Datasets">
+        <metadata inherited="true">
+          <serviceName>all</serviceName>
+          <dataType>GRID</dataType>
+        </metadata>
+        <property name="DatasetScan" value="true" />
+      </catalogRef>
+      <catalogRef xlink:href="aggregations.xml" xlink:title="Aggregations" name="" />
+    </catalog>
+    """
+    cat = read_xml(xml, 'http://example.test/catalog.xml')
+    assert cat.name == "THREDDS PSD Test Catalog"
+    assert cat.references[0].name == "Datasets"
+    assert cat.references[1].name == "Aggregations"
