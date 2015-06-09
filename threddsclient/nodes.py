@@ -92,8 +92,8 @@ class DirectDataset(Dataset):
         self.service_name = self._service_name(soup)
 
     def fileurl(self):
-        for service in self.catalog.services[0].children:
-            if service.serviceType == "HTTPServer":
+        for service in self.catalog.services[0].services:
+            if service.service_type == "HTTPServer":
                 return urlparse.urljoin(service.url, self.url_path)
         
     @staticmethod
