@@ -71,7 +71,7 @@ class CollectionDataset(Dataset):
     """
     A container for other datasets
     """
-    def __init__(self, soup, catalog, skip):
+    def __init__(self, soup, catalog, skip=[]):
         Dataset.__init__(self, soup, catalog)
         self.content_type = "application/directory"
         from .utils import find_datasets

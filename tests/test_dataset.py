@@ -33,9 +33,9 @@ def test_unidata_sample_1():
     </dataset>
     """
     soup = BSoup(xml, 'xml')
-    d = Dataset(soup.dataset)
+    catalog = Catalog('http://example.test')
+    d = DirectDataset(soup.dataset, catalog)
     assert d.name == "DC8 flight 1999-11-19"
-    assert d.url == "SOLVE_DC8_19991119.nc"
 
 
 def test_unidata_sample_2():
@@ -46,8 +46,8 @@ def test_unidata_sample_2():
     </dataset>
     """
     soup = BSoup(xml, 'xml')
-    Dataset(soup.dataset)
-
+    catalog = Catalog('http://example.test')
+    DirectDataset(soup.dataset, catalog)
 
 def test_unidata_sample_3():
     xml = """
@@ -58,8 +58,9 @@ def test_unidata_sample_3():
     </dataset>
     """
     soup = BSoup(xml, 'xml')
-    d = Dataset(soup.dataset)
-    assert len(d.children) == 3
+    catalog = Catalog('http://example.test')
+    d = CollectionDataset(soup.dataset, catalog)
+    assert len(d.datasets) == 3
 
 def test_noaa_sample_1():
     xml = """
@@ -73,10 +74,11 @@ def test_noaa_sample_1():
     </dataset>
     """
     soup = BSoup(xml, 'xml')
-    d = Dataset(soup.dataset)
+    catalog = Catalog('http://example.test')
+    d = DirectDataset(soup.dataset, catalog)
     assert d.name == "mslp.1979.nc"
     assert d.ID == "Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1979.nc"
-    assert d.url == "Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1979.nc"
+    assert d.url == "http://example.test?dataset=Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1979.nc"
     assert d.bytes == 7685000
     assert d.modified == "2011-06-14T00:17:11Z"
     assert d.content_type == "application/netcdf"

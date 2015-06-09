@@ -24,14 +24,14 @@ import pytest
 
 from threddsclient import *
 
-
 def test_unidata_sample_1():
     xml = """
     <service name="mcidasServer" serviceType="ADDE"
     base="http://thredds.ucar.edu/thredds/adde/" />
     """
     soup = BSoup(xml, 'xml')
-    s = Service(soup.service, 'http://example.test')
+    catalog = Catalog('http://example.test')
+    s = Service(soup.service, catalog)
     assert s.name == 'mcidasServer'
     assert s.url == 'http://thredds.ucar.edu/thredds/adde/'
     assert s.serviceType == "ADDE"
@@ -42,5 +42,6 @@ def test_unidata_sample_2():
     <service name="this" serviceType="DODS" base="dods/" />
     """
     soup = BSoup(xml, 'xml')
-    s = Service(soup.service, 'http://example.test')
+    catalog = Catalog('http://example.test')
+    s = Service(soup.service, catalog)
     assert s.url == 'http://example.test/dods/'
