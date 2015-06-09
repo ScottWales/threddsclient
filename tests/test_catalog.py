@@ -81,7 +81,7 @@ def test_unidata_sample():
     assert d.name == "SAGE III Ozone Loss"
 
 
-def test_noaa_sample_1():
+def test_noaa_catalog():
     xml = """
     <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" name="THREDDS PSD Test Catalog" version="1.0.1">
       <service name="all" serviceType="Compound" base="">
@@ -105,7 +105,7 @@ def test_noaa_sample_1():
     assert cat.references[0].name == "Datasets"
     assert cat.references[1].name == "Aggregations"
 
-def test_noaa_sample_2():
+def test_noaa_datasets():
     xml = """
     <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">
       <service name="all" serviceType="Compound" base="">
@@ -131,3 +131,73 @@ def test_noaa_sample_2():
     assert cat.datasets[0].content_type == "application/directory"
     assert cat.datasets[0].references[0].name == "ncep.reanalysis"
     assert cat.datasets[0].references[0].url == "http://example.test/ncep.reanalysis/catalog.xml"
+
+def test_noaa_datasets_dailyavgs():
+    xml = """
+    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">
+      <service name="all" serviceType="Compound" base="">
+        <service name="odap" serviceType="OPENDAP" base="/psd/thredds/dodsC/" />
+        <service name="http" serviceType="HTTPServer" base="/psd/thredds/fileServer/" />
+        <service name="wcs" serviceType="WCS" base="/psd/thredds/wcs/" />
+        <service name="wms" serviceType="WMS" base="/psd/thredds/wms/" />
+      </service>
+      <dataset name="ncep.reanalysis2.dailyavgs" ID="Datasets/ncep.reanalysis2.dailyavgs">
+        <metadata inherited="true">
+          <serviceName>all</serviceName>
+          <dataType>GRID</dataType>
+        </metadata>
+        <catalogRef xlink:href="gaussian_grid/catalog.xml" xlink:title="gaussian_grid" ID="Datasets/ncep.reanalysis2.dailyavgs/gaussian_grid" name="" />
+        <catalogRef xlink:href="pressure/catalog.xml" xlink:title="pressure" ID="Datasets/ncep.reanalysis2.dailyavgs/pressure" name="" />
+        <catalogRef xlink:href="surface/catalog.xml" xlink:title="surface" ID="Datasets/ncep.reanalysis2.dailyavgs/surface" name="" />
+      </dataset>
+    </catalog>
+    """
+    cat = read_xml(xml, 'http://example.test/catalog.xml')
+    assert cat.datasets[0].name == "ncep.reanalysis2.dailyavgs"
+    assert cat.datasets[0].content_type == "application/directory"
+    assert cat.datasets[0].references[2].name == "surface"
+    assert cat.datasets[0].references[2].url == "http://example.test/surface/catalog.xml"
+
+
+def test_noaa_datasets_dailyavg_surface():
+    xml = """
+    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">
+      <service name="all" serviceType="Compound" base="">
+        <service name="odap" serviceType="OPENDAP" base="/psd/thredds/dodsC/" />
+        <service name="http" serviceType="HTTPServer" base="/psd/thredds/fileServer/" />
+        <service name="wcs" serviceType="WCS" base="/psd/thredds/wcs/" />
+        <service name="wms" serviceType="WMS" base="/psd/thredds/wms/" />
+      </service>
+      <dataset name="surface" ID="Datasets/ncep.reanalysis2.dailyavgs/surface">
+        <metadata inherited="true">
+          <serviceName>all</serviceName>
+          <dataType>GRID</dataType>
+        </metadata>
+        <dataset name="mslp.1980.nc" ID="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc" urlPath="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc">
+          <dataSize units="Mbytes">7.706</dataSize>
+          <date type="modified">2011-06-14T00:17:05Z</date>
+        </dataset>
+        <dataset name="mslp.1981.nc" ID="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1981.nc" urlPath="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1981.nc">
+          <dataSize units="Mbytes">7.685</dataSize>
+          <date type="modified">2011-06-14T00:17:16Z</date>
+        </dataset>
+        <dataset name="mslp.1982.nc" ID="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1982.nc" urlPath="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1982.nc">
+          <dataSize units="Mbytes">7.685</dataSize>
+          <date type="modified">2011-06-14T00:17:14Z</date>
+        </dataset>
+        <dataset name="mslp.1983.nc" ID="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1983.nc" urlPath="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1983.nc">
+          <dataSize units="Mbytes">7.685</dataSize>
+          <date type="modified">2011-06-14T00:16:56Z</date>
+        </dataset>
+        <dataset name="mslp.1984.nc" ID="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1984.nc" urlPath="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1984.nc">
+          <dataSize units="Mbytes">7.706</dataSize>
+          <date type="modified">2011-06-14T00:17:19Z</date>
+        </dataset>
+      </dataset>
+    </catalog>
+    """
+    cat = read_xml(xml, 'http://example.test/catalog.xml')
+    assert cat.datasets[0].name == "surface"
+    assert cat.datasets[0].content_type == "application/directory"
+    assert cat.datasets[0].datasets[0].name == "mslp.1980.nc"
+    assert cat.datasets[0].datasets[0].url == "http://example.test/catalog.xml?dataset=Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc"
