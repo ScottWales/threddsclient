@@ -146,3 +146,4 @@ def test_noaa_datasets_dailyavg_surface():
     assert cat.datasets[0].datasets[0].bytes == 7706000
     assert cat.datasets[0].datasets[0].url == "http://example.test/catalog.xml?dataset=Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc"
     assert cat.datasets[0].datasets[0].fileurl() == 'http://example.test/psd/thredds/fileServer/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc'
+    assert cat.datasets[0].datasets[0].content_type == 'application/netcdf'
