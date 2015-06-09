@@ -81,7 +81,7 @@ def test_unidata_sample():
     assert d.name == "SAGE III Ozone Loss"
 
 
-def test_noaa_sample():
+def test_noaa_sample_1():
     xml = """
     <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" name="THREDDS PSD Test Catalog" version="1.0.1">
       <service name="all" serviceType="Compound" base="">
@@ -104,3 +104,30 @@ def test_noaa_sample():
     assert cat.name == "THREDDS PSD Test Catalog"
     assert cat.references[0].name == "Datasets"
     assert cat.references[1].name == "Aggregations"
+
+def test_noaa_sample_2():
+    xml = """
+    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">
+      <service name="all" serviceType="Compound" base="">
+        <service name="odap" serviceType="OPENDAP" base="/psd/thredds/dodsC/" />
+        <service name="http" serviceType="HTTPServer" base="/psd/thredds/fileServer/" />
+        <service name="wcs" serviceType="WCS" base="/psd/thredds/wcs/" />
+        <service name="wms" serviceType="WMS" base="/psd/thredds/wms/" />
+      </service>
+      <dataset name="Datasets" ID="Datasets">
+        <metadata inherited="true">
+          <serviceName>all</serviceName>
+          <dataType>GRID</dataType>
+        </metadata>
+        <catalogRef xlink:href="ncep.reanalysis/catalog.xml" xlink:title="ncep.reanalysis" ID="Datasets/ncep.reanalysis" name="" />
+        <catalogRef xlink:href="ncep.reanalysis.dailyavgs/catalog.xml" xlink:title="ncep.reanalysis.dailyavgs" ID="Datasets/ncep.reanalysis.dailyavgs" name="" />
+        <catalogRef xlink:href="ncep.reanalysis2/catalog.xml" xlink:title="ncep.reanalysis2" ID="Datasets/ncep.reanalysis2" name="" />
+        <catalogRef xlink:href="ncep.reanalysis2.dailyavgs/catalog.xml" xlink:title="ncep.reanalysis2.dailyavgs" ID="Datasets/ncep.reanalysis2.dailyavgs" name="" />
+      </dataset>
+    </catalog>
+    """
+    cat = read_xml(xml, 'http://example.test/catalog.xml')
+    assert cat.datasets[0].name == "Datasets"
+    assert cat.datasets[0].content_type == "application/directory"
+    assert cat.datasets[0].references[0].name == "ncep.reanalysis"
+    assert cat.datasets[0].references[0].url == "http://example.test/ncep.reanalysis/catalog.xml"
