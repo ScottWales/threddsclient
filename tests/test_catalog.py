@@ -102,6 +102,12 @@ def test_noaa_catalog():
     """
     cat = read_xml(xml, 'http://example.test/catalog.xml')
     assert cat.name == "THREDDS PSD Test Catalog"
+    assert cat.services[0].name == 'all'
+    assert cat.services[0].service_type == 'Compound'
+    assert cat.services[0].url == 'http://example.test/catalog.xml'
+    assert cat.services[0].services[0].name == 'odap'
+    assert cat.services[0].services[0].service_type == 'OPENDAP'
+    assert cat.services[0].services[0].url == 'http://example.test/psd/thredds/dodsC/'
     assert cat.references[0].name == "Datasets"
     assert cat.references[1].name == "Aggregations"
 
@@ -127,6 +133,9 @@ def test_noaa_datasets():
     </catalog>
     """
     cat = read_xml(xml, 'http://example.test/catalog.xml')
+    assert cat.services[0].services[1].name == 'http'
+    assert cat.services[0].services[1].service_type == 'HTTPServer'
+    assert cat.services[0].services[1].url == 'http://example.test/psd/thredds/fileServer/'
     assert cat.datasets[0].name == "Datasets"
     assert cat.datasets[0].content_type == "application/directory"
     assert cat.datasets[0].references[0].name == "ncep.reanalysis"
@@ -153,6 +162,9 @@ def test_noaa_datasets_dailyavgs():
     </catalog>
     """
     cat = read_xml(xml, 'http://example.test/catalog.xml')
+    assert cat.services[0].services[3].name == 'wms'
+    assert cat.services[0].services[3].service_type == 'WMS'
+    assert cat.services[0].services[3].url == 'http://example.test/psd/thredds/wms/'
     assert cat.datasets[0].name == "ncep.reanalysis2.dailyavgs"
     assert cat.datasets[0].content_type == "application/directory"
     assert cat.datasets[0].references[2].name == "surface"

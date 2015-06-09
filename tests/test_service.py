@@ -34,7 +34,7 @@ def test_unidata_sample_1():
     s = Service(soup.service, catalog)
     assert s.name == 'mcidasServer'
     assert s.url == 'http://thredds.ucar.edu/thredds/adde/'
-    assert s.serviceType == "ADDE"
+    assert s.service_type == "ADDE"
 
 
 def test_unidata_sample_2():

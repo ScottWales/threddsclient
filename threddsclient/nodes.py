@@ -32,12 +32,9 @@ class Service(Node):
         Node.__init__(self, soup, catalog)
         self.base = soup.get('base')
         self.url = urlparse.urljoin(self.catalog.url, self.base)
-        self.serviceType = soup.get('serviceType')
+        self.service_type = soup.get('serviceType')
         self.content_type = "application/service"
-
-        self.children = [Service(s, self.catalog) for s in
-                         soup.find_all('service', recursive=False)]
-
+        self.services = [Service(s, self.catalog) for s in soup.find_all('service', recursive=False)]
 
 class CatalogRef(Node):
     """
