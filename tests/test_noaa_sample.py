@@ -91,7 +91,11 @@ def test_noaa_datasets_dailyavgs():
     assert cat.services[0].services[3].service_type == 'WMS'
     assert cat.services[0].services[3].url == 'http://example.test/psd/thredds/wms/'
     assert cat.datasets[0].name == "ncep.reanalysis2.dailyavgs"
+    assert cat.datasets[0].ID == "Datasets/ncep.reanalysis2.dailyavgs"
+    assert cat.datasets[0].url == "http://example.test/catalog.xml?dataset=Datasets/ncep.reanalysis2.dailyavgs"
     assert cat.datasets[0].content_type == "application/directory"
+    assert len(cat.datasets[0].datasets) == 0
+    assert len(cat.datasets[0].references) == 3
     assert cat.datasets[0].references[2].name == "surface"
     assert cat.datasets[0].references[2].url == "http://example.test/surface/catalog.xml"
 
