@@ -209,6 +209,9 @@ def test_noaa_datasets_dailyavg_surface():
     </catalog>
     """
     cat = read_xml(xml, 'http://example.test/catalog.xml')
+    assert cat.services[0].services[2].name == 'wcs'
+    assert cat.services[0].services[2].service_type == 'WCS'
+    assert cat.services[0].services[2].url == 'http://example.test/psd/thredds/wcs/'
     assert cat.datasets[0].name == "surface"
     assert cat.datasets[0].content_type == "application/directory"
     assert cat.datasets[0].datasets[0].name == "mslp.1980.nc"
