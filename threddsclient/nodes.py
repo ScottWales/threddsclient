@@ -52,6 +52,28 @@ class CatalogRef(Node):
         from .catalog import read_url
         return read_url(self.url)
 
+class DatasetMetadata(object):
+    def __init__(self, soup):
+        self.soup = soup
+
+    def inherited(self):
+        return self.soup.get('inherited', 'false') == 'true'
+
+    def service_name(self):
+        if self.soup.servicename:
+            return self.soup.servicename.text
+        return None
+
+    def authority(self):
+        if self.soup.authority:
+            return self.soup.authority.text
+        return None
+
+    def data_format_type(self):
+        if self.soup.dataformattype:
+            return self.soup.data_format_type.text
+        return None
+
 class Dataset(Node):
     """
     Abstract dataset class
@@ -60,9 +82,16 @@ class Dataset(Node):
         Node.__init__(self, soup, catalog)
         self.ID = soup.get('ID')
         self.url = "{0}?dataset={1}".format(self.catalog.url, self.ID)
+        self.metadata = self._metadata(soup)
 
     def is_collection(self):
         return False
+
+    @staticmethod
+    def _metadata(soup):
+        if soup.metadata:
+            return DatasetMetadata(soup.metadata)
+        return None
     
 class CollectionDataset(Dataset):
     """
