@@ -1,5 +1,7 @@
 """
 A Python view of a Thredds data server
+
+http://www.unidata.ucar.edu/software/thredds/current/tds/tutorial/CatalogPrimer.html
 """
 
 from bs4 import BeautifulSoup as BSoup

@@ -70,6 +70,10 @@ class CollectionDataset(Dataset):
     """
     def __init__(self, soup, catalog, skip=[]):
         Dataset.__init__(self, soup, catalog)
+        self.collection_type = soup.get('collectionType')
+        self.harvest = self._harvest(soup)
+        # TODO: add attributes for harvesting: contributor, keyword, publisher, summary, rights, ...
+        # see http://www.unidata.ucar.edu/software/thredds/current/tds/tutorial/CatalogPrimer.html#Describing_datasets
         self.content_type = "application/directory"
         from .utils import find_datasets
         self.datasets = find_datasets(soup, self.catalog, skip)
@@ -78,6 +82,10 @@ class CollectionDataset(Dataset):
 
     def is_collection(self):
         return True
+
+    @staticmethod
+    def _harvest(soup):
+        return soup.get('harvest', 'false') == 'true'
         
 class DirectDataset(Dataset):
     """
@@ -86,10 +94,13 @@ class DirectDataset(Dataset):
     def __init__(self, soup, catalog):
         Dataset.__init__(self, soup, catalog)
         self.url_path = soup.get('urlPath')
+        self.authority = soup.get('authority')
         self.content_type = "application/netcdf"
         self.modified = self._modified(soup)
         self.bytes = self._bytes(soup)
         self.service_name = self._service_name(soup)
+        self.data_type = self._data_type(soup)
+        self.data_format_type = self._data_format_type(soup)
 
     def fileurl(self):
         for service in self.catalog.services[0].services:
@@ -115,6 +126,18 @@ class DirectDataset(Dataset):
             except:
                 logger.exception("dataset size conversion failed")
         return size
+
+    @staticmethod
+    def _data_type(soup):
+        if soup.datatype:
+            return soup.datetype.text
+        return None
+
+    @staticmethod
+    def _data_format_type(soup):
+        if soup.dataformattype:
+            return soup.dataformattype.text
+        return None
 
     @staticmethod
     def _service_name(soup):
