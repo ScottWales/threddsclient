@@ -14,6 +14,7 @@ class Node:
     Common items to all nodes
     """
     def __init__(self, soup, catalog):
+        self.soup = soup
         self.catalog = catalog
         self.name = soup.get('name')
         self.content_type = None
@@ -56,22 +57,32 @@ class DatasetMetadata(object):
     def __init__(self, soup):
         self.soup = soup
 
+    @property
     def inherited(self):
         return self.soup.get('inherited', 'false') == 'true'
 
+    @property
     def service_name(self):
         if self.soup.servicename:
             return self.soup.servicename.text
         return None
 
+    @property
     def authority(self):
         if self.soup.authority:
             return self.soup.authority.text
         return None
 
+    @property
+    def data_type(self):
+        if self.soup.datatype:
+            return self.soup.datatype.text
+        return None
+
+    @property
     def data_format_type(self):
         if self.soup.dataformattype:
-            return self.soup.data_format_type.text
+            return self.soup.dataformattype.text
         return None
 
 class Dataset(Node):
@@ -123,18 +134,23 @@ class DirectDataset(Dataset):
     def __init__(self, soup, catalog):
         Dataset.__init__(self, soup, catalog)
         self.url_path = soup.get('urlPath')
-        self.authority = soup.get('authority')
         self.content_type = "application/netcdf"
         self.modified = self._modified(soup)
         self.bytes = self._bytes(soup)
-        self.service_name = self._service_name(soup)
-        self.data_type = self._data_type(soup)
-        self.data_format_type = self._data_format_type(soup)
 
     def fileurl(self):
         for service in self.catalog.services[0].services:
             if service.service_type == "HTTPServer":
                 return urlparse.urljoin(service.url, self.url_path)
+
+    @property
+    def authority(self):
+        authority = None
+        if self.soup.get('authority'):
+            authority = self.soup.get('authority')
+        elif self.metadata:
+            authority = self.metadata.authority
+        return authority
         
     @staticmethod
     def _modified(soup):
@@ -156,28 +172,31 @@ class DirectDataset(Dataset):
                 logger.exception("dataset size conversion failed")
         return size
 
-    @staticmethod
-    def _data_type(soup):
-        if soup.datatype:
-            return soup.datetype.text
-        return None
+    @property
+    def data_type(self):
+        data_type = None
+        if self.soup.datatype:
+            data_type = self.soup.datetype.text
+        elif self.metadata:
+            data_type = self.metadata.data_type
+        return data_type
 
-    @staticmethod
-    def _data_format_type(soup):
-        if soup.dataformattype:
-            return soup.dataformattype.text
-        return None
+    @property
+    def data_format_type(self):
+        data_format_type = None
+        if self.soup.dataformattype:
+            data_format_type = soup.dataformattype.text
+        elif self.metadata:
+            data_format_type = self.metadata.data_format_type
+        return data_format_type
 
-    @staticmethod
-    def _service_name(soup):
+    @property
+    def service_name(self):
         service_name = None
-        try:
-            service_tag = soup.servicename
-            if service_tag is None:
-                service_tag = soup.metadata.servicename
-            service_name = service_tag.text
-        except:
-            logger.exception("dataset has no service_name")
+        if self.soup.servicename:
+            service_name = self.soup.servicename.text
+        elif self.metdata:
+            service_name = self.metadata.service_name
         return service_name
 
     
