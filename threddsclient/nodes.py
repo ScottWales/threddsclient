@@ -48,49 +48,11 @@ class CatalogRef(Node):
         self.href = soup.get('xlink:href')
         self.url = urlparse.urljoin(self.catalog.url, self.href)
         self.content_type = "application/directory"
-        self.metadata = self._metadata(soup)
-
-    @staticmethod
-    def _metadata(soup):
-        if soup.metadata:
-            return Metadata(soup.metadata)
-        return None
 
     def follow(self):
         from .catalog import read_url
         return read_url(self.url)
 
-class Metadata(object):
-    def __init__(self, soup):
-        self.soup = soup
-
-    @property
-    def inherited(self):
-        return self.soup.get('inherited', 'false') == 'true'
-
-    @property
-    def service_name(self):
-        if self.soup.serviceName:
-            return self.soup.serviceName.text
-        return None
-
-    @property
-    def authority(self):
-        if self.soup.authority:
-            return self.soup.authority.text
-        return None
-
-    @property
-    def data_type(self):
-        if self.soup.dataType:
-            return self.soup.dataType.text
-        return None
-
-    @property
-    def data_format_type(self):
-        if self.soup.dataformattype:
-            return self.soup.dataformattype.text
-        return None
 
 class Dataset(Node):
     """
@@ -105,18 +67,13 @@ class Dataset(Node):
         return False
 
     @property
-    def metadata(self):
-        if self.soup.metadata:
-            return Metadata(self.soup.metadata)
-        return None
-
-    @property
     def service_name(self):
         service_name = None
         if self.soup.get('servicename'):
             service_name = self.soup.get('servicename')
-        elif self.metadata:
-            service_name = self.metadata.service_name
+        elif self.soup.metadata:
+            if self.soup.metadata.serviceName:
+                service_name = self.soup.metadata.serviceName.text
         elif self.soup.parent:
             if self.soup.parent.metadata:
                 if self.soup.parent.metadata.serviceName:
@@ -126,10 +83,11 @@ class Dataset(Node):
     @property
     def data_type(self):
         data_type = None
-        if self.soup.datatype:
-            data_type = self.soup.datatype.text
-        elif self.metadata:
-            data_type = self.metadata.data_type
+        if self.soup.get('datatype'):
+            data_type = self.soup.get('datatype')
+        elif self.soup.metadata:
+            if self.soup.metadata.dataType:
+                data_type = self.soup.metadata.dataType.text
         elif self.soup.parent:
             if self.soup.parent.metadata:
                 if self.soup.parent.metadata.dataType:
