@@ -35,6 +35,8 @@ def test_noaa_catalog():
     assert cat.services[0].services[0].url == 'http://example.test/psd/thredds/dodsC/'
     assert cat.references[0].name == "Datasets"
     assert cat.references[1].name == "Aggregations"
+    assert len(cat.flat_datasets()) == 0
+    assert len(cat.flat_references()) == 2
 
 def test_noaa_datasets():
     xml = """
@@ -98,6 +100,8 @@ def test_noaa_datasets_dailyavgs():
     assert len(cat.datasets[0].references) == 3
     assert cat.datasets[0].references[2].name == "surface"
     assert cat.datasets[0].references[2].url == "http://example.test/surface/catalog.xml"
+    assert len(cat.flat_datasets()) == 0
+    assert len(cat.flat_references()) == 3
 
 
 def test_noaa_datasets_dailyavg_surface():
@@ -161,4 +165,6 @@ def test_noaa_datasets_dailyavg_surface():
     assert cat.download_urls()[1] == "http://example.test/psd/thredds/fileServer/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1981.nc"
     assert len(cat.opendap_urls()) == 5
     assert cat.opendap_urls()[2] == "http://example.test/psd/thredds/dodsC/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1982.nc"
+    assert len(cat.flat_datasets()) == 5
+    assert len(cat.flat_references()) == 0
     
