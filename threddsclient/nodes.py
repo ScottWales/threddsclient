@@ -55,7 +55,7 @@ class CatalogRef(Node):
         self.content_type = "application/directory"
 
     def follow(self):
-        from .catalog import read_url
+        from .parser import read_url
         return read_url(self.url)
 
 
