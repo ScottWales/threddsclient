@@ -163,7 +163,12 @@ class DirectDataset(Dataset):
 
     def access_url(self, service_type=FILE_SERVICE):
         url = None
-        for service in self.catalog.services[0].services:
+        for service in self.catalog.services:
+            if service.service_type == 'Compound':
+                for c_service in service.services:
+                    if c_service.service_type == service_type:
+                        url = urlparse.urljoin(c_service.url, self.url_path)
+                        break
             if service.service_type == service_type:
                 url = urlparse.urljoin(service.url, self.url_path)
                 break
