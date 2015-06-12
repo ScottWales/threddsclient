@@ -7,6 +7,9 @@ from .catalog import Catalog
 import logging
 logger = logging.getLogger(__name__)
 
+def download_urls(url, recursive=False, skip=None, **kwargs):
+    catalog = read_url(url, skip, **kwargs)
+    return catalog.download_urls(recursive)
 
 def read_url(url, skip=None, **kwargs):
     """

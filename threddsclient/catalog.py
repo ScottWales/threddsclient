@@ -10,11 +10,6 @@ logger = logging.getLogger(__name__)
 
 SKIPS = [".*files.*", ".*Individual Files.*", ".*File_Access.*", ".*Forecast Model Run.*", ".*Constant Forecast Offset.*", ".*Constant Forecast Date.*", "\..*"]
 
-
-def download_urls(url, recursive=False):
-    catalog = read_url(url)
-    return catalog.download_urls(recursive)
-
 def flat_datasets(datasets):
     flat_ds = []
     for ds in datasets:
