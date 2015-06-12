@@ -143,12 +143,15 @@ def test_noaa_datasets_dailyavg_surface():
     assert cat.services[0].services[2].url == 'http://example.test/psd/thredds/wcs/'
     assert cat.datasets[0].name == "surface"
     assert cat.datasets[0].content_type == "application/directory"
+    assert cat.datasets[0].service_name == "all"
+    assert cat.datasets[0].data_type == "GRID"
     assert cat.datasets[0].datasets[0].name == "mslp.1980.nc"
     assert cat.datasets[0].datasets[0].ID == "Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc"
     assert cat.datasets[0].datasets[0].url_path == "Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc"
     assert cat.datasets[0].datasets[0].modified == '2011-06-14T00:17:05Z'
     assert cat.datasets[0].datasets[0].bytes == 7706000
-    #assert cat.datasets[0].datasets[0].data_type == 'Grid'
+    assert cat.datasets[0].datasets[0].data_type == 'GRID'
+    assert cat.datasets[0].datasets[0].service_name == 'all'
     assert cat.datasets[0].datasets[0].url == "http://example.test/catalog.xml?dataset=Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc"
     assert cat.datasets[0].datasets[0].fileurl() == 'http://example.test/psd/thredds/fileServer/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc'
     assert cat.datasets[0].datasets[0].content_type == 'application/netcdf'

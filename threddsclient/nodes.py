@@ -70,8 +70,8 @@ class Metadata(object):
 
     @property
     def service_name(self):
-        if self.soup.servicename:
-            return self.soup.servicename.text
+        if self.soup.serviceName:
+            return self.soup.serviceName.text
         return None
 
     @property
@@ -82,8 +82,8 @@ class Metadata(object):
 
     @property
     def data_type(self):
-        if self.soup.datatype:
-            return self.soup.datatype.text
+        if self.soup.dataType:
+            return self.soup.dataType.text
         return None
 
     @property
@@ -100,16 +100,41 @@ class Dataset(Node):
         Node.__init__(self, soup, catalog)
         self.ID = soup.get('ID')
         self.url = "{0}?dataset={1}".format(self.catalog.url, self.ID)
-        self.metadata = self._metadata(soup)
 
     def is_collection(self):
         return False
 
-    @staticmethod
-    def _metadata(soup):
-        if soup.metadata:
-            return Metadata(soup.metadata)
+    @property
+    def metadata(self):
+        if self.soup.metadata:
+            return Metadata(self.soup.metadata)
         return None
+
+    @property
+    def service_name(self):
+        service_name = None
+        if self.soup.get('servicename'):
+            service_name = self.soup.get('servicename')
+        elif self.metadata:
+            service_name = self.metadata.service_name
+        elif self.soup.parent:
+            if self.soup.parent.metadata:
+                if self.soup.parent.metadata.serviceName:
+                    service_name = self.soup.parent.metadata.serviceName.text
+        return service_name
+
+    @property
+    def data_type(self):
+        data_type = None
+        if self.soup.datatype:
+            data_type = self.soup.datatype.text
+        elif self.metadata:
+            data_type = self.metadata.data_type
+        elif self.soup.parent:
+            if self.soup.parent.metadata:
+                if self.soup.parent.metadata.dataType:
+                    data_type = self.soup.parent.metadata.dataType.text
+        return data_type
     
 class CollectionDataset(Dataset):
     """
@@ -180,19 +205,6 @@ class DirectDataset(Dataset):
         return size
 
     @property
-    def data_type(self):
-        data_type = None
-        if self.soup.datatype:
-            data_type = self.soup.datatype.text
-        elif self.metadata:
-            data_type = self.metadata.data_type
-        elif self.soup.parent:
-            if self.soup.parent.metadata:
-                if self.soup.parent.metadata.datatype:
-                    data_type = self.soup.parent.metadata.datatype.text
-        return data_type
-
-    @property
     def data_format_type(self):
         data_format_type = None
         if self.soup.dataformattype:
@@ -201,18 +213,7 @@ class DirectDataset(Dataset):
             data_format_type = self.metadata.data_format_type
         return data_format_type
 
-    @property
-    def service_name(self):
-        service_name = None
-        if self.soup.servicename:
-            service_name = self.soup.servicename.text
-        elif self.metdata:
-            service_name = self.metadata.service_name
-        elif self.soup.parent:
-            if self.soup.parent.metadata:
-                if self.soup.parent.metadata.service_name:
-                    service_name = self.soup.parent.metadata.service_name.text
-        return service_name
+    
 
     
 
