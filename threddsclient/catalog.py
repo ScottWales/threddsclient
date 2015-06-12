@@ -8,7 +8,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-SKIPS = [".*files.*", ".*Individual Files.*", ".*File_Access.*", ".*Forecast Model Run.*", ".*Constant Forecast Offset.*", ".*Constant Forecast Date.*", "\..*"]
+SKIPS = []
 
 def flat_datasets(datasets):
     flat_ds = []
@@ -75,7 +75,10 @@ class Catalog:
 
     @property
     def name(self):
-        return self.soup.get('name')
+        name = self.soup.get('name')
+        if not name and len(self.datasets) > 0:
+            name = self.datasets[0].name
+        return name
 
     @property
     def services(self):
