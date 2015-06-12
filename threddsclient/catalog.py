@@ -69,10 +69,13 @@ class Catalog:
         self.soup = soup
         self.url = url
         self.skip = skip_pattern(skip)
-        self.name = ""
         self._services = None
         self._references = None
         self._datasets = None
+
+    @property
+    def name(self):
+        return self.soup.get('name')
 
     @property
     def services(self):
@@ -102,10 +105,16 @@ class Catalog:
         flat_refs.extend(flat_references(self.datasets))
         return flat_refs
 
-    def download_urls(self, recursive=False):
+    def download_urls(self):
         urls = []
         for dataset in self.flat_datasets():
-            urls.append(dataset.fileurl())
+            urls.append(dataset.file_url())
+        return urls
+
+    def opendap_urls(self):
+        urls = []
+        for dataset in self.flat_datasets():
+            urls.append(dataset.opendap_url())
         return urls
 
 
