@@ -4,8 +4,6 @@ A Python view of a Thredds data server
 http://www.unidata.ucar.edu/software/thredds/current/tds/tutorial/CatalogPrimer.html
 """
 
-from threddsclient import utils
-
 import logging
 logger = logging.getLogger(__name__)
 
@@ -13,6 +11,23 @@ logger = logging.getLogger(__name__)
 def download_urls(url, recursive=False):
     catalog = read_url(url)
     return catalog.download_urls(recursive)
+
+def flat_datasets(datasets):
+    flat_ds = []
+    for ds in datasets:
+        if ds.is_collection():
+            flat_ds.extend(flat_datasets(ds.datasets))
+        else:
+            flat_ds.append(ds)
+    return flat_ds
+
+def flat_references(datasets):
+    flat_refs = []
+    for ds in datasets:
+        if ds.is_collection():
+            flat_refs.extend(ds.references)
+            flat_refs.extend(flat_references(ds.datasets))
+    return flat_refs
 
 class Catalog:
     "A Thredds catalog"
@@ -32,12 +47,12 @@ class Catalog:
         return self._services
 
     def flat_datasets(self):
-        return utils.flat_datasets(self.datasets)
+        return flat_datasets(self.datasets)
 
     def flat_references(self):
         flat_refs = []
         flat_refs.extend(self.references)
-        flat_refs.extend(utils.flat_references(self.datasets))
+        flat_refs.extend(flat_references(self.datasets))
         return flat_refs
 
     def download_urls(self, recursive=False):
@@ -45,3 +60,5 @@ class Catalog:
         for dataset in self.flat_datasets():
             urls.append(dataset.fileurl())
         return urls
+
+

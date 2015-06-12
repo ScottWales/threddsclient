@@ -51,19 +51,4 @@ def find_datasets(soup, catalog, skip):
             datasets.append( DirectDataset(ds, catalog) )
     return datasets
 
-def flat_datasets(datasets):
-    flat_ds = []
-    for ds in datasets:
-        if ds.is_collection():
-            flat_ds.extend(flat_datasets(ds.datasets))
-        else:
-            flat_ds.append(ds)
-    return flat_ds
 
-def flat_references(datasets):
-    flat_refs = []
-    for ds in datasets:
-        if ds.is_collection():
-            flat_refs.extend(ds.references)
-            flat_refs.extend(flat_references(ds.datasets))
-    return flat_refs
