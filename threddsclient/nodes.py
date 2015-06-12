@@ -119,6 +119,9 @@ class Dataset(Node):
         data_format_type = None
         if self.soup.dataFormatType:
             data_format_type = soup.dataFormatType.text
+        elif self.soup.metadata:
+            if self.soup.metadata.dataFormatType:
+                data_type = self.soup.metadata.dataFormatType.text
         elif self.soup.parent.metadata:
             if self.soup.parent.metadata.dataFormatType:
                 data_format_type = self.soup.parent.metadata.dataFormatType.text
