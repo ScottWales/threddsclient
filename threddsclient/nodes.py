@@ -9,6 +9,11 @@ from .utils import size_in_bytes
 import logging
 logger = logging.getLogger(__name__)
 
+FILE_SERVICE = "HTTPServer"
+OPENDAP_SERVICE = "OPENDAP"
+WMS_SERVICE = "WMS"
+WCS_SERVICE = "WCS"
+
 class Node(object):
     """
     Common items to all nodes
@@ -134,7 +139,7 @@ class DirectDataset(Dataset):
         self.modified = self._modified(soup)
         self.bytes = self._bytes(soup)
 
-    def access_url(self, service_type="HTTPServer"):
+    def access_url(self, service_type=FILE_SERVICE):
         url = None
         for service in self.catalog.services[0].services:
             if service.service_type == service_type:
@@ -143,13 +148,13 @@ class DirectDataset(Dataset):
         return url
 
     def file_url(self):
-        return self.access_url("HTTPServer")
+        return self.access_url(FILE_SERVICE)
 
     def opendap_url(self):
-        return self.access_url("OPENDAP")
+        return self.access_url(OPENDAP_SERVICE)
 
     def wms_url(self):
-        return self.access_url("WMS")
+        return self.access_url(WMS_SERVICE)
 
     @property
     def authority(self):
