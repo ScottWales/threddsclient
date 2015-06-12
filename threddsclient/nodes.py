@@ -138,9 +138,9 @@ class CollectionDataset(Dataset):
         # TODO: add attributes for harvesting: contributor, keyword, publisher, summary, rights, ...
         # see http://www.unidata.ucar.edu/software/thredds/current/tds/tutorial/CatalogPrimer.html#Describing_datasets
         self.content_type = "application/directory"
-        from .utils import find_datasets
+        from .catalog import find_datasets
         self.datasets = find_datasets(soup, self.catalog)
-        from .utils import find_references
+        from .catalog import find_references
         self.references = find_references(soup, self.catalog)
 
     def is_collection(self):

@@ -44,8 +44,5 @@ def read_xml(xml, baseurl, skip=None):
     catalog = Catalog(soup, baseurl, skip)
     catalog.name = soup.get('name')
     
-    # Collect datasets
-    catalog.references = utils.find_references(soup, catalog)
-    catalog.datasets = utils.find_datasets(soup, catalog)
     
     return catalog

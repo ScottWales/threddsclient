@@ -32,6 +32,32 @@ def flat_references(datasets):
             flat_refs.extend(flat_references(ds.datasets))
     return flat_refs
 
+def find_references(soup, catalog):
+    from .nodes import CatalogRef
+    references = []
+    for ref in soup.find_all('catalogRef', recursive=False):
+        title = ref.get('xlink:title', '')
+        if any([x.match(title) for x in catalog.skip]):
+            logger.info("Skipping catalogRef based on 'skips'.  Title: {0}".format(title))
+            continue
+        else:
+            references.append(CatalogRef(ref, catalog))
+    return references
+
+def find_datasets(soup, catalog):
+    from .nodes import CollectionDataset, DirectDataset
+    datasets = []
+    for ds in soup.find_all('dataset', recursive=False):    
+        name = ds.get("name")
+        if any([x.match(name) for x in catalog.skip]):
+            logger.info("Skipping dataset based on 'skips'.  Name: {0}".format(name))
+            continue
+        elif ds.get('urlPath') is None:
+            datasets.append( CollectionDataset(ds, catalog) )
+        else:
+            datasets.append( DirectDataset(ds, catalog) )
+    return datasets
+
 
 def skip_pattern(skip=None):
     # Skip these dataset links, such as a list of files
@@ -50,8 +76,8 @@ class Catalog:
         self.skip = skip_pattern(skip)
         self.name = ""
         self._services = None
-        self.references = []
-        self.datasets = []
+        self._references = None
+        self._datasets = None
 
     @property
     def services(self):
@@ -59,6 +85,18 @@ class Catalog:
             from .nodes import Service
             self._services = [Service(x, self) for x in self.soup.find_all('service', recursive=False)]
         return self._services
+
+    @property
+    def references(self):
+        if not self._references:
+            self._references = find_references(self.soup, self)
+        return self._references
+
+    @property
+    def datasets(self):
+        if not self._datasets:
+            self._datasets = find_datasets(self.soup, self)
+        return self._datasets
 
     def flat_datasets(self):
         return flat_datasets(self.datasets)
