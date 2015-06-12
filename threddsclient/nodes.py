@@ -60,11 +60,17 @@ class Dataset(Node):
     """
     def __init__(self, soup, catalog):
         Node.__init__(self, soup, catalog)
-        self.ID = soup.get('ID')
-        self.url = "{0}?dataset={1}".format(self.catalog.url, self.ID)
 
     def is_collection(self):
         return False
+
+    @property
+    def ID(self):
+        return self.soup.get('ID')
+
+    @property
+    def url(self):
+        return "{0}?dataset={1}".format(self.catalog.url, self.ID)
 
     @property
     def service_name(self):
