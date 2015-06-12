@@ -78,6 +78,17 @@ class Dataset(Node):
         return "{0}?dataset={1}".format(self.catalog.url, self.ID)
 
     @property
+    def authority(self):
+        authority = None
+        if self.soup.get('authority'):
+            authority = self.soup.get('authority')
+        elif self.soup.metadata:
+            authority = self.soup.metadata.authority
+        elif self.soup.parent.metadata:
+            authority = self.soup.parent.metadata.authority
+        return authority
+
+    @property
     def service_name(self):
         service_name = None
         if self.soup.get('servicename'):
@@ -85,10 +96,9 @@ class Dataset(Node):
         elif self.soup.metadata:
             if self.soup.metadata.serviceName:
                 service_name = self.soup.metadata.serviceName.text
-        elif self.soup.parent:
-            if self.soup.parent.metadata:
-                if self.soup.parent.metadata.serviceName:
-                    service_name = self.soup.parent.metadata.serviceName.text
+        elif self.soup.parent.metadata:
+            if self.soup.parent.metadata.serviceName:
+                service_name = self.soup.parent.metadata.serviceName.text
         return service_name
 
     @property
@@ -99,11 +109,20 @@ class Dataset(Node):
         elif self.soup.metadata:
             if self.soup.metadata.dataType:
                 data_type = self.soup.metadata.dataType.text
-        elif self.soup.parent:
-            if self.soup.parent.metadata:
-                if self.soup.parent.metadata.dataType:
-                    data_type = self.soup.parent.metadata.dataType.text
+        elif self.soup.parent.metadata:
+            if self.soup.parent.metadata.dataType:
+                data_type = self.soup.parent.metadata.dataType.text
         return data_type
+
+    @property
+    def data_format_type(self):
+        data_format_type = None
+        if self.soup.dataFormatType:
+            data_format_type = soup.dataFormatType.text
+        elif self.soup.parent.metadata:
+            if self.soup.parent.metadata.dataFormatType:
+                data_format_type = self.soup.parent.metadata.dataFormatType.text
+        return data_format_type
     
 class CollectionDataset(Dataset):
     """
@@ -155,16 +174,7 @@ class DirectDataset(Dataset):
 
     def wms_url(self):
         return self.access_url(WMS_SERVICE)
-
-    @property
-    def authority(self):
-        authority = None
-        if self.soup.get('authority'):
-            authority = self.soup.get('authority')
-        elif self.metadata:
-            authority = self.metadata.authority
-        return authority
-        
+      
     @staticmethod
     def _modified(soup):
         modified = None
@@ -185,14 +195,6 @@ class DirectDataset(Dataset):
                 logger.exception("dataset size conversion failed")
         return size
 
-    @property
-    def data_format_type(self):
-        data_format_type = None
-        if self.soup.dataformattype:
-            data_format_type = soup.dataformattype.text
-        elif self.metadata:
-            data_format_type = self.metadata.data_format_type
-        return data_format_type
 
     
 
