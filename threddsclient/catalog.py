@@ -8,6 +8,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+SKIPS = [".*files.*", ".*Individual Files.*", ".*File_Access.*", ".*Forecast Model Run.*", ".*Constant Forecast Offset.*", ".*Constant Forecast Date.*", "\..*"]
+
+
 def download_urls(url, recursive=False):
     catalog = read_url(url)
     return catalog.download_urls(recursive)
@@ -29,11 +32,22 @@ def flat_references(datasets):
             flat_refs.extend(flat_references(ds.datasets))
     return flat_refs
 
+
+def skip_pattern(skip=None):
+    # Skip these dataset links, such as a list of files
+    # ie. "files/"
+    import re
+    if skip is None:
+        skip = SKIPS
+    skip = map(lambda x: re.compile(x), skip)
+    return skip
+
 class Catalog:
     "A Thredds catalog"
-    def __init__(self, soup, url):
+    def __init__(self, soup, url, skip=None):
         self.soup = soup
         self.url = url
+        self.skip = skip_pattern(skip)
         self.name = ""
         self._services = None
         self.references = []

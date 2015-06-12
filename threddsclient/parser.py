@@ -41,13 +41,11 @@ def read_xml(xml, baseurl, skip=None):
     except AttributeError:
         raise ValueError("Does not appear to be a Thredds catalog")
 
-    catalog = Catalog(soup, baseurl)
+    catalog = Catalog(soup, baseurl, skip)
     catalog.name = soup.get('name')
-       
-    skip = utils.skip_pattern(skip)
     
     # Collect datasets
-    catalog.references = utils.find_references(soup, catalog, skip)
-    catalog.datasets = utils.find_datasets(soup, catalog, skip)
+    catalog.references = utils.find_references(soup, catalog)
+    catalog.datasets = utils.find_datasets(soup, catalog)
     
     return catalog

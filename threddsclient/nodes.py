@@ -131,7 +131,7 @@ class CollectionDataset(Dataset):
     """
     A container for other datasets
     """
-    def __init__(self, soup, catalog, skip=[]):
+    def __init__(self, soup, catalog):
         Dataset.__init__(self, soup, catalog)
         self.collection_type = soup.get('collectionType')
         self.harvest = self._harvest(soup)
@@ -139,9 +139,9 @@ class CollectionDataset(Dataset):
         # see http://www.unidata.ucar.edu/software/thredds/current/tds/tutorial/CatalogPrimer.html#Describing_datasets
         self.content_type = "application/directory"
         from .utils import find_datasets
-        self.datasets = find_datasets(soup, self.catalog, skip)
+        self.datasets = find_datasets(soup, self.catalog)
         from .utils import find_references
-        self.references = find_references(soup, self.catalog, skip)
+        self.references = find_references(soup, self.catalog)
 
     def is_collection(self):
         return True
