@@ -105,6 +105,16 @@ class Catalog:
         flat_refs.extend(flat_references(self.datasets))
         return flat_refs
 
+    def get_services(self, service_name):
+        services = []
+        for service in self.services:
+            if service.name == service_name:
+                if service.service_type == 'Compound':
+                    services.extend(service.services)
+                else:
+                    services.append(service)
+        return services
+
     def download_urls(self):
         urls = []
         for dataset in self.flat_datasets():
