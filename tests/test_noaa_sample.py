@@ -157,3 +157,8 @@ def test_noaa_datasets_dailyavg_surface():
     assert cat.datasets[0].datasets[0].opendap_url() == 'http://example.test/psd/thredds/dodsC/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc'
     assert cat.datasets[0].datasets[0].wms_url() == 'http://example.test/psd/thredds/wms/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc'
     assert cat.datasets[0].datasets[0].content_type == 'application/netcdf'
+    assert len(cat.download_urls()) == 5
+    assert cat.download_urls()[1] == "http://example.test/psd/thredds/fileServer/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1981.nc"
+    assert len(cat.opendap_urls()) == 5
+    assert cat.opendap_urls()[2] == "http://example.test/psd/thredds/dodsC/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1982.nc"
+    
