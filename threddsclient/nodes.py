@@ -134,10 +134,22 @@ class DirectDataset(Dataset):
         self.modified = self._modified(soup)
         self.bytes = self._bytes(soup)
 
-    def fileurl(self):
+    def access_url(self, service_type="HTTPServer"):
+        url = None
         for service in self.catalog.services[0].services:
-            if service.service_type == "HTTPServer":
-                return urlparse.urljoin(service.url, self.url_path)
+            if service.service_type == service_type:
+                url = urlparse.urljoin(service.url, self.url_path)
+                break
+        return url
+
+    def file_url(self):
+        return self.access_url("HTTPServer")
+
+    def opendap_url(self):
+        return self.access_url("OPENDAP")
+
+    def wms_url(self):
+        return self.access_url("WMS")
 
     @property
     def authority(self):
