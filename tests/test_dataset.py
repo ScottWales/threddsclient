@@ -33,7 +33,7 @@ def test_unidata_sample_1():
     </dataset>
     """
     soup = BSoup(xml, 'xml')
-    catalog = Catalog('http://example.test')
+    catalog = Catalog(soup, 'http://example.test')
     d = DirectDataset(soup.dataset, catalog)
     assert d.name == "DC8 flight 1999-11-19"
 
@@ -46,7 +46,7 @@ def test_unidata_sample_2():
     </dataset>
     """
     soup = BSoup(xml, 'xml')
-    catalog = Catalog('http://example.test')
+    catalog = Catalog(soup, 'http://example.test')
     DirectDataset(soup.dataset, catalog)
 
 def test_unidata_sample_3():
@@ -58,7 +58,7 @@ def test_unidata_sample_3():
     </dataset>
     """
     soup = BSoup(xml, 'xml')
-    catalog = Catalog('http://example.test')
+    catalog = Catalog(soup, 'http://example.test')
     d = CollectionDataset(soup.dataset, catalog)
     assert len(d.datasets) == 3
 
@@ -74,7 +74,7 @@ def test_noaa_sample_1():
     </dataset>
     """
     soup = BSoup(xml, 'xml')
-    catalog = Catalog('http://example.test')
+    catalog = Catalog(soup, 'http://example.test')
     d = DirectDataset(soup.dataset, catalog)
     assert d.name == "mslp.1979.nc"
     assert d.ID == "Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1979.nc"

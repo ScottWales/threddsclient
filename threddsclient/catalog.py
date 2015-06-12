@@ -15,13 +15,21 @@ def download_urls(url, recursive=False):
     return catalog.download_urls(recursive)
 
 class Catalog:
-    "A Thredds catalog entry"
-    def __init__(self, url):
+    "A Thredds catalog"
+    def __init__(self, soup, url):
+        self.soup = soup
         self.url = url
         self.name = ""
-        self.services = []
+        self._services = None
         self.references = []
         self.datasets = []
+
+    @property
+    def services(self):
+        if not self._services:
+            from .nodes import Service
+            self._services = [Service(x, self) for x in self.soup.find_all('service', recursive=False)]
+        return self._services
 
     def flat_datasets(self):
         return utils.flat_datasets(self.datasets)

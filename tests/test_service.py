@@ -30,7 +30,7 @@ def test_unidata_sample_1():
     base="http://thredds.ucar.edu/thredds/adde/" />
     """
     soup = BSoup(xml, 'xml')
-    catalog = Catalog('http://example.test')
+    catalog = Catalog(soup, 'http://example.test')
     s = Service(soup.service, catalog)
     assert s.name == 'mcidasServer'
     assert s.url == 'http://thredds.ucar.edu/thredds/adde/'
@@ -42,6 +42,6 @@ def test_unidata_sample_2():
     <service name="this" serviceType="DODS" base="dods/" />
     """
     soup = BSoup(xml, 'xml')
-    catalog = Catalog('http://example.test')
+    catalog = Catalog(soup, 'http://example.test')
     s = Service(soup.service, catalog)
     assert s.url == 'http://example.test/dods/'

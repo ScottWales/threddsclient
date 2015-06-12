@@ -25,10 +25,6 @@ def skip_pattern(skip=None):
     skip = map(lambda x: re.compile(x), skip)
     return skip
 
-def find_services(soup, catalog):
-    from .nodes import Service
-    return [Service(x, catalog) for x in soup.find_all('service', recursive=False)]
-
 def find_references(soup, catalog, skip):
     from .nodes import CatalogRef
     references = []
