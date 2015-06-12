@@ -9,7 +9,7 @@ from .utils import size_in_bytes
 import logging
 logger = logging.getLogger(__name__)
 
-class Node:
+class Node(object):
     """
     Common items to all nodes
     """
@@ -48,12 +48,19 @@ class CatalogRef(Node):
         self.href = soup.get('xlink:href')
         self.url = urlparse.urljoin(self.catalog.url, self.href)
         self.content_type = "application/directory"
+        self.metadata = self._metadata(soup)
+
+    @staticmethod
+    def _metadata(soup):
+        if soup.metadata:
+            return Metadata(soup.metadata)
+        return None
 
     def follow(self):
         from .catalog import read_url
         return read_url(self.url)
 
-class DatasetMetadata(object):
+class Metadata(object):
     def __init__(self, soup):
         self.soup = soup
 
@@ -101,7 +108,7 @@ class Dataset(Node):
     @staticmethod
     def _metadata(soup):
         if soup.metadata:
-            return DatasetMetadata(soup.metadata)
+            return Metadata(soup.metadata)
         return None
     
 class CollectionDataset(Dataset):
@@ -176,9 +183,13 @@ class DirectDataset(Dataset):
     def data_type(self):
         data_type = None
         if self.soup.datatype:
-            data_type = self.soup.datetype.text
+            data_type = self.soup.datatype.text
         elif self.metadata:
             data_type = self.metadata.data_type
+        elif self.soup.parent:
+            if self.soup.parent.metadata:
+                if self.soup.parent.metadata.datatype:
+                    data_type = self.soup.parent.metadata.datatype.text
         return data_type
 
     @property
@@ -197,6 +208,10 @@ class DirectDataset(Dataset):
             service_name = self.soup.servicename.text
         elif self.metdata:
             service_name = self.metadata.service_name
+        elif self.soup.parent:
+            if self.soup.parent.metadata:
+                if self.soup.parent.metadata.service_name:
+                    service_name = self.soup.parent.metadata.service_name.text
         return service_name
 
     
