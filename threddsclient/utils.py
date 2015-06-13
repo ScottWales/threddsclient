@@ -4,7 +4,7 @@ def fix_catalog_url(url):
     """
     import urlparse
     from os.path import splitext
-    
+
     u = urlparse.urlsplit(url)
     name, ext = splitext(u.path)
     if ext == ".html":
