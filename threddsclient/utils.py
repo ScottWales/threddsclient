@@ -1,3 +1,17 @@
+def fix_catalog_url(url):
+    """
+    Replace .html with .xml extension
+    """
+    import urlparse
+    from os.path import splitext
+    
+    u = urlparse.urlsplit(url)
+    name, ext = splitext(u.path)
+    if ext == ".html":
+        u = urlparse.urlsplit(url.replace(".html", ".xml"))
+    return u.geturl()
+
+
 def size_in_bytes(size, unit):
     # Convert to bytes
     if unit == "Kbytes":

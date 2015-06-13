@@ -82,6 +82,8 @@ class Catalog:
         name = self.soup.get('name')
         if not name and len(self.datasets) > 0:
             name = self.datasets[0].name
+        if name:
+            name = name.strip()
         return name
 
     @property

@@ -24,6 +24,8 @@ def read_url(url, skip=None, **kwargs):
     :raises ValueError: if the XML is not a Thredds catalog
     :raises requests.ConnectionError: if unable to connect to the URL
     """
+    from .utils import fix_catalog_url
+    url = fix_catalog_url(url)
     req = requests.get(url, **kwargs)
     return read_xml(req.text, url)
 
