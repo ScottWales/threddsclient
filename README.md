@@ -3,9 +3,9 @@ Thredds Client for Python
 [![Travis Build](https://travis-ci.org/bird-house/threddsclient.svg?branch=master)](https://travis-ci.org/bird-house/threddsclient)
 [![Install with Conda](https://binstar.org/birdhouse/threddsclient/badges/installer/conda.svg)](https://binstar.org/birdhouse/threddsclient)
 [![Binstar Build](https://binstar.org/birdhouse/threddsclient/badges/build.svg)](https://binstar.org/birdhouse/threddsclient)
-[![Version](https://binstar.org/birdhouse/threddsclient/badges/version.svg](https://binstar.org/birdhouse/threddsclient)
-[![License](https://binstar.org/birdhouse/threddsclient/badges/license.svg](https://binstar.org/birdhouse/threddsclient)
-[![Downloads](https://binstar.org/birdhouse/threddsclient/badges/downloads.svg](https://binstar.org/birdhouse/threddsclient)
+[![Version](https://binstar.org/birdhouse/threddsclient/badges/version.svg)](https://binstar.org/birdhouse/threddsclient)
+[![License](https://binstar.org/birdhouse/threddsclient/badges/license.svg)](https://binstar.org/birdhouse/threddsclient)
+[![Downloads](https://binstar.org/birdhouse/threddsclient/badges/downloads.svg)](https://binstar.org/birdhouse/threddsclient)
 
 
 Start reading a catalogue
