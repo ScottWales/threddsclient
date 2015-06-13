@@ -55,3 +55,4 @@ def test_birdhouse_top():
     assert len(cat.references) == 0
     assert len(cat.flat_datasets()) == 0
     assert len(cat.flat_references()) == 4
+    assert cat.flat_references()[0].name == "malleefowl"
