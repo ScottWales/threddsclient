@@ -19,7 +19,6 @@ def test_birdhouse_sample():
             <catalogRef xlink:href="hummingbird/catalog.xml" xlink:title="hummingbird" ID="testDatasetScan/hummingbird" name="" />
             <catalogRef xlink:href="flyingpigeon/catalog.xml" xlink:title="flyingpigeon" ID="testDatasetScan/flyingpigeon" name="" />
             <catalogRef xlink:href="emu/catalog.xml" xlink:title="emu" ID="testDatasetScan/emu" name="" />
-            <catalogRef xlink:href="cache/catalog.xml" xlink:title="cache" ID="testDatasetScan/cache" name="" />
           </dataset>
         </catalog>
         """
@@ -28,4 +27,4 @@ def test_birdhouse_sample():
     assert len(cat.datasets) == 1
     assert len(cat.references) == 0
     assert len(cat.flat_datasets()) == 0
-    assert len(cat.flat_references()) == 5
+    assert len(cat.flat_references()) == 4
