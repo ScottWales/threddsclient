@@ -25,6 +25,9 @@ def test_birdhouse_root():
     assert len(cat.references) == 1
     assert len(cat.flat_datasets()) == 0
     assert len(cat.flat_references()) == 1
+    assert len(cat.services) == 1
+    assert len(cat.services[0].services) == 4
+    assert len(cat.get_services('all')) == 4
 
 def test_birdhouse_top():
     xml = """
