@@ -45,6 +45,7 @@ Get download URLs of all direct datasets
     urls = cat.download_urls()
     # or use shortcut
     urls = threddsclient.download_urls('http://example.com/thredds/catalog.xml')
+```
 
 Get OpenDAP URLs of all direct datasets
 
@@ -52,4 +53,4 @@ Get OpenDAP URLs of all direct datasets
     urls = cat.opendap_urls()
     # or use shortcut
     urls = threddsclient.opendap_urls('http://example.com/thredds/catalog.xml')
-
+```
