@@ -1,13 +1,13 @@
 Thredds Client for Python
 =========================
-[![Build Status](https://travis-ci.org/ScottWales/threddsclient.svg?branch=master)](https://travis-ci.org/ScottWales/threddsclient)
-[![Coverage Status](https://coveralls.io/repos/ScottWales/threddsclient/badge.svg)](https://coveralls.io/r/ScottWales/threddsclient)
+[![Build Status](https://travis-ci.org/bird-house/threddsclient.svg?branch=master)](https://travis-ci.org/bird-house/threddsclient)
+
 
 Start reading a catalogue
 
 ```python
     import threddsclient
-    c = threddsclient.read_url('http://example.com/thredds/catalog.xml')
+    cat = threddsclient.read_url('http://example.com/thredds/catalog.xml')
 ```
 
 Get a list of links to other catalogues & follow them
@@ -16,11 +16,23 @@ Get a list of links to other catalogues & follow them
     links = c.references
 
     print links[0].name
-    c2 = links[0].follow
+    cat2 = links[0].follow
 ```
 
-Get a list of data files in this catalogue
+Get a list of datasets in this catalogue
 
 ```python
-    data  = c.datasets
+    data  = cat.datasets
+```
+
+Get flat list of all direct datasets (data files) in the catalogue
+
+```python
+    datasets = cat.flat_datasets()
+```
+
+Get flat list of all references in the catalogue
+
+```python
+    datasets = cat.flat_references()
 ```
