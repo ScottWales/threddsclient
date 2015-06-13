@@ -1,7 +1,3 @@
-"""
-Tests for catalog
-"""
-
 import pytest
 
 from threddsclient import *
@@ -61,5 +57,26 @@ def test_unidata_sample():
     cat = read_xml(xml, 'http://example.test/catalog.xml')
     d = cat.datasets[0]
     assert d.name == "SAGE III Ozone Loss"
+
+def test_unidata_sample_1():
+    xml = """
+    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.1" >
+      <service name="mcidasServer" serviceType="ADDE" base="http://thredds.ucar.edu/thredds/adde/" />
+    </catalog>
+    """
+    cat = read_xml(xml, 'http://example.test')
+    assert cat.services[0].name == 'mcidasServer'
+    assert cat.services[0].url == 'http://thredds.ucar.edu/thredds/adde/'
+    assert cat.services[0].service_type == "ADDE"
+
+
+def test_unidata_sample_2():
+    xml = """
+    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.1" >
+      <service name="this" serviceType="DODS" base="dods/" />
+    </catalog>
+    """
+    cat = read_xml(xml, 'http://example.test')
+    assert cat.services[0].url == 'http://example.test/dods/'
 
 
