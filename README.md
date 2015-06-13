@@ -38,3 +38,18 @@ Get flat list of all references in the catalogue
 ```python
     datasets = cat.flat_references()
 ```
+
+Get download URLs of all direct datasets
+
+```python
+    urls = cat.download_urls()
+    # or use shortcut
+    urls = threddsclient.download_urls('http://example.com/thredds/catalog.xml')
+
+Get OpenDAP URLs of all direct datasets
+
+```python
+    urls = cat.opendap_urls()
+    # or use shortcut
+    urls = threddsclient.opendap_urls('http://example.com/thredds/catalog.xml')
+

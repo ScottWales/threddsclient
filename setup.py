@@ -13,7 +13,7 @@ def changes():
 
 
 setup(name             = 'threddsclient',
-      version          = '0.2.0',
+      version          = '0.3.0',
       description      = 'Thredds catalog client',
       long_description = readme() + '/n/n' + changes(),
       author	       = 'Birdhouse',

@@ -1,6 +1,11 @@
 Changes
 -------
 
+### 0.3.0 (2015-06-13)
+
+* Refactored
+* added catalog.opendap_urls()
+
 ### 0.2.0 (2015-06-08)
 
 * Refactored
