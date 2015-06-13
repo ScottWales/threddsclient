@@ -9,8 +9,3 @@ def size_in_bytes(size, unit):
     elif unit == "Tbytes":
         size *= 1e+12
     return int(size)
-
-
-
-
-

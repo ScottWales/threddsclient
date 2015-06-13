@@ -3,11 +3,14 @@ import requests
 import logging
 logger = logging.getLogger(__name__)
 
+
 def download_urls(url, skip=None, **kwargs):
     return read_url(url, skip, **kwargs).download_urls()
 
+
 def opendap_urls(url, skip=None, **kwargs):
     return read_url(url, skip, **kwargs).opendap_urls()
+
 
 def read_url(url, skip=None, **kwargs):
     """
@@ -46,4 +49,3 @@ def read_xml(xml, baseurl, skip=None):
         raise ValueError("Does not appear to be a Thredds catalog")
 
     return Catalog(soup, baseurl, skip)
-

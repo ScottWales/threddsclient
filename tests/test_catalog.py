@@ -2,9 +2,11 @@ import pytest
 
 from threddsclient import *
 
+
 def test_tpac():
-    #cat = read_url('http://portal.sf.utas.edu.au/thredds/catalog.xml')
+    # cat = read_url('http://portal.sf.utas.edu.au/thredds/catalog.xml')
     pass
+
 
 def test_invalid_url():
     with pytest.raises(requests.ConnectionError):
@@ -58,6 +60,7 @@ def test_unidata_sample():
     d = cat.datasets[0]
     assert d.name == "SAGE III Ozone Loss"
 
+    
 def test_unidata_sample_1():
     xml = """
     <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.1" >
@@ -78,5 +81,3 @@ def test_unidata_sample_2():
     """
     cat = read_xml(xml, 'http://example.test')
     assert cat.services[0].url == 'http://example.test/dods/'
-
-

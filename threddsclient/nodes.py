@@ -14,6 +14,7 @@ OPENDAP_SERVICE = "OPENDAP"
 WMS_SERVICE = "WMS"
 WCS_SERVICE = "WCS"
 
+
 class Node(object):
     """
     Common items to all nodes
@@ -42,6 +43,7 @@ class Service(Node):
         self.content_type = "application/service"
         self.services = [Service(s, self.catalog) for s in soup.find_all('service', recursive=False)]
 
+        
 class CatalogRef(Node):
     """
     A reference to a different Thredds catalog
@@ -126,6 +128,7 @@ class Dataset(Node):
             if self.soup.parent.metadata.dataFormatType:
                 data_format_type = self.soup.parent.metadata.dataFormatType.text
         return data_format_type
+
     
 class CollectionDataset(Dataset):
     """
@@ -149,7 +152,8 @@ class CollectionDataset(Dataset):
     @staticmethod
     def _harvest(soup):
         return soup.get('harvest', 'false') == 'true'
-        
+
+    
 class DirectDataset(Dataset):
     """
     A reference to a data file
@@ -197,11 +201,3 @@ class DirectDataset(Dataset):
             except:
                 logger.exception("dataset size conversion failed")
         return size
-
-
-    
-
-    
-
-
-

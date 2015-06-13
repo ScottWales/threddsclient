@@ -7,8 +7,8 @@ http://www.unidata.ucar.edu/software/thredds/current/tds/tutorial/CatalogPrimer.
 import logging
 logger = logging.getLogger(__name__)
 
-
 SKIPS = []
+
 
 def flat_datasets(datasets):
     flat_ds = []
@@ -19,6 +19,7 @@ def flat_datasets(datasets):
             flat_ds.append(ds)
     return flat_ds
 
+
 def flat_references(datasets):
     flat_refs = []
     for ds in datasets:
@@ -26,6 +27,7 @@ def flat_references(datasets):
             flat_refs.extend(ds.references)
             flat_refs.extend(flat_references(ds.datasets))
     return flat_refs
+
 
 def find_references(soup, catalog):
     from .nodes import CatalogRef
@@ -39,18 +41,19 @@ def find_references(soup, catalog):
             references.append(CatalogRef(ref, catalog))
     return references
 
+
 def find_datasets(soup, catalog):
     from .nodes import CollectionDataset, DirectDataset
     datasets = []
-    for ds in soup.find_all('dataset', recursive=False):    
+    for ds in soup.find_all('dataset', recursive=False):
         name = ds.get("name")
         if any([x.match(name) for x in catalog.skip]):
             logger.info("Skipping dataset based on 'skips'.  Name: {0}".format(name))
             continue
         elif ds.get('urlPath') is None:
-            datasets.append( CollectionDataset(ds, catalog) )
+            datasets.append(CollectionDataset(ds, catalog))
         else:
-            datasets.append( DirectDataset(ds, catalog) )
+            datasets.append(DirectDataset(ds, catalog))
     return datasets
 
 
@@ -62,6 +65,7 @@ def skip_pattern(skip=None):
         skip = SKIPS
     skip = map(lambda x: re.compile(x), skip)
     return skip
+
 
 class Catalog:
     "A Thredds catalog"
@@ -129,5 +133,3 @@ class Catalog:
         for dataset in self.flat_datasets():
             urls.append(dataset.opendap_url())
         return urls
-
-
