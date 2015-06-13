@@ -27,7 +27,7 @@ def test_unidata_sample_2():
     cat = read_xml(xml, 'http://example.test')
     assert cat.datasets[0].name == "DC8 flight 1999-11-19, 1 min merge"
 
-    
+
 def test_unidata_sample_3():
     xml = """
     <catalog>
@@ -42,7 +42,7 @@ def test_unidata_sample_3():
     assert len(cat.flat_datasets()) == 2
     # TODO: handle alias dataset
 
-    
+
 def test_noaa_sample_1():
     xml = """
     <catalog>

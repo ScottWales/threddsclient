@@ -43,7 +43,7 @@ class Service(Node):
         self.content_type = "application/service"
         self.services = [Service(s, self.catalog) for s in soup.find_all('service', recursive=False)]
 
-        
+
 class CatalogRef(Node):
     """
     A reference to a different Thredds catalog
@@ -129,7 +129,7 @@ class Dataset(Node):
                 data_format_type = self.soup.parent.metadata.dataFormatType.text
         return data_format_type
 
-    
+
 class CollectionDataset(Dataset):
     """
     A container for other datasets
@@ -153,7 +153,7 @@ class CollectionDataset(Dataset):
     def _harvest(soup):
         return soup.get('harvest', 'false') == 'true'
 
-    
+
 class DirectDataset(Dataset):
     """
     A reference to a data file
@@ -181,7 +181,7 @@ class DirectDataset(Dataset):
 
     def wms_url(self):
         return self.access_url(WMS_SERVICE)
-      
+
     @staticmethod
     def _modified(soup):
         modified = None
@@ -189,7 +189,7 @@ class DirectDataset(Dataset):
             if soup.date.get('type') == 'modified':
                 modified = soup.date.text
         return modified
-    
+
     @staticmethod
     def _bytes(soup):
         size = None

@@ -41,7 +41,7 @@ def read_xml(xml, baseurl, skip=None):
     """
     from bs4 import BeautifulSoup as BSoup
     from .catalog import Catalog
-    
+
     try:
         soup = BSoup(xml, 'xml').catalog
         soup.name  # Xml should contain <catalog/> at top level

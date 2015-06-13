@@ -30,7 +30,7 @@ def test_birdhouse_root():
     assert len(cat.services[0].services) == 4
     assert len(cat.get_services('all')) == 4
 
-    
+
 def test_birdhouse_top():
     xml = """
     <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">

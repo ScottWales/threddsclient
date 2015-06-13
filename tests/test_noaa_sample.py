@@ -39,7 +39,7 @@ def test_noaa_catalog():
     assert len(cat.flat_datasets()) == 0
     assert len(cat.flat_references()) == 2
 
-    
+
 def test_noaa_datasets():
     xml = """
     <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">
@@ -70,7 +70,7 @@ def test_noaa_datasets():
     assert cat.datasets[0].references[0].name == "ncep.reanalysis"
     assert cat.datasets[0].references[0].url == "http://example.test/ncep.reanalysis/catalog.xml"
 
-    
+
 def test_noaa_datasets_dailyavgs():
     xml = """
     <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">

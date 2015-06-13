@@ -60,7 +60,7 @@ def test_unidata_sample():
     d = cat.datasets[0]
     assert d.name == "SAGE III Ozone Loss"
 
-    
+
 def test_unidata_sample_1():
     xml = """
     <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.1" >
