@@ -68,7 +68,12 @@ def skip_pattern(skip=None):
 
 
 class Catalog:
-    "A Thredds catalog"
+    """
+    A Thredds catalog
+
+    TODO: use serverInfo to get harvest information
+    http://www.esrl.noaa.gov/psd/thredds/serverInfo.xml
+    """
     def __init__(self, soup, url, skip=None):
         self.soup = soup
         self.url = url
