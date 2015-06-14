@@ -1,6 +1,13 @@
 Changes
 -------
 
+### 0.3.1 (2015-06-14)
+
+* fixed catalog.follow()
+* using dataset.download_url()
+* added ipython example
+* cleaned up Readme
+
 ### 0.3.0 (2015-06-13)
 
 * Refactored
