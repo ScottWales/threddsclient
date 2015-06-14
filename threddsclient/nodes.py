@@ -57,7 +57,7 @@ class CatalogRef(Node):
         self.content_type = "application/directory"
 
     def follow(self):
-        from .parser import read_url
+        from .client import read_url
         return read_url(self.url)
 
 
@@ -173,7 +173,7 @@ class DirectDataset(Dataset):
                 break
         return url
 
-    def file_url(self):
+    def download_url(self):
         return self.access_url(FILE_SERVICE)
 
     def opendap_url(self):

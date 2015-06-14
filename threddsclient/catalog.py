@@ -132,7 +132,7 @@ class Catalog:
     def download_urls(self):
         urls = []
         for dataset in self.flat_datasets():
-            urls.append(dataset.file_url())
+            urls.append(dataset.download_url())
         return urls
 
     def opendap_urls(self):

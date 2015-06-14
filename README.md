@@ -66,7 +66,7 @@ Get a list of references to other catalogs & follow them
     refs = cat.references
 
     print refs[0].name
-    cat2 = refs[0].follow
+    cat2 = refs[0].follow()
 ```
 
 Get a list of datasets in this catalog
