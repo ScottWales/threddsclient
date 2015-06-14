@@ -37,6 +37,8 @@ $ python setup.py develop
 
 ## Using Thredds Client
 
+Read the Thredds tutorial on catalogs: [Thredds Catalog Primer](http://www.unidata.ucar.edu/software/thredds/current/tds/tutorial/CatalogPrimer.html)
+
 ### Get download URLs of a catalog
 
 ``` python
@@ -87,7 +89,7 @@ Get flat list of all references in the catalog
     references = cat.flat_references()
 ```
 
-## Example with NOAA Thredds Catalog
+## Examples with IPython Notebook
 
-See the IPython Notebook ...
+* [NOAA Thredds Catalog](http://nbviewer.ipython.org/github/bird-house/threddsclient/blob/master/examples/noaa_example.ipynb)
 
