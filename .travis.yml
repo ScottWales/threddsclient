@@ -1,12 +1,11 @@
 language: python
 python:
-  - "2.6"
   - "2.7"
 install:
  - sudo apt-get install python-lxml
  - python setup.py install
  - pip install pytest-pep8 pytest-cov python-coveralls
 script:
- - py.test -v tests --pep8 threddsclient --cov threddsclient --cov-report term-missing
+ - py.test -v tests --cov threddsclient --cov-report term-missing
 after_success:
  - coveralls

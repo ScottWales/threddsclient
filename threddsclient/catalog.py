@@ -1,81 +1,142 @@
-#!/usr/bin/env python
 """
 A Python view of a Thredds data server
 
-author: Scott Wales <scott.wales@unimelb.edu.au>
-
-Copyright 2015 ARC Centre of Excellence for Climate Systems Science
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+http://www.unidata.ucar.edu/software/thredds/current/tds/tutorial/CatalogPrimer.html
 """
 
-from bs4 import BeautifulSoup as BSoup
-import requests
-import urlparse
+import logging
+logger = logging.getLogger(__name__)
 
-from .nodes import *
-
-
-def readUrl(url, **kwargs):
-    """
-    Create a Catalog from a Thredds catalog link
-
-    :param str url:     URL pointing to a Thredds catalog.xml file
-    :param \**kwargs:   Arguments to pass to requests.get()
-                        (e.g. for authentication)
-    :rtype Catalog
-
-    :raises ValueError: if the XML is not a Thredds catalog
-    :raises requests.ConnectionError: if unable to connect to the URL
-    """
-    req = requests.get(url, **kwargs)
-    readXml(req.text, url)
+SKIPS = []
 
 
-def readXml(xml, baseurl):
-    """
-    Create a Catalog from a XML string
+def flat_datasets(datasets):
+    flat_ds = []
+    for ds in datasets:
+        if ds.is_collection():
+            flat_ds.extend(flat_datasets(ds.datasets))
+        else:
+            flat_ds.append(ds)
+    return flat_ds
 
-    :param str xml:     XML code for a Thredds catalog
-    :param str baseurl: URL base to use for catalog links
-    :rtype Catalog
 
-    :raises ValueError: if the XML is not a Thredds catalog
-    """
-    try:
-        soup = BSoup(xml, 'xml').catalog
-        soup.name  # Xml should contain <catalog/> at top level
-    except AttributeError:
-        raise ValueError("Does not appear to be a Thredds catalog")
+def flat_references(datasets):
+    flat_refs = []
+    for ds in datasets:
+        if ds.is_collection():
+            flat_refs.extend(ds.references)
+            flat_refs.extend(flat_references(ds.datasets))
+    return flat_refs
 
-    catalog = Catalog()
-    catalog.name = soup.get('name')
 
-    # Collect references and datasets
-    catalog.services = [Service(x, baseurl) for x in
-                        soup.find_all('service', recursive=False)]
-    catalog.references = [Reference(x, baseurl) for x in
-                          soup.find_all('catalogRef', recursive=False)]
-    catalog.datasets = [Dataset(x) for x in
-                        soup.find_all('dataset', recursive=False)]
+def find_references(soup, catalog):
+    from .nodes import CatalogRef
+    references = []
+    for ref in soup.find_all('catalogRef', recursive=False):
+        title = ref.get('xlink:title', '')
+        if any([x.match(title) for x in catalog.skip]):
+            logger.info("Skipping catalogRef based on 'skips'.  Title: {0}".format(title))
+            continue
+        else:
+            references.append(CatalogRef(ref, catalog))
+    return references
 
-    return catalog
+
+def find_datasets(soup, catalog):
+    from .nodes import CollectionDataset, DirectDataset
+    datasets = []
+    for ds in soup.find_all('dataset', recursive=False):
+        name = ds.get("name")
+        if any([x.match(name) for x in catalog.skip]):
+            logger.info("Skipping dataset based on 'skips'.  Name: {0}".format(name))
+            continue
+        elif ds.get('urlPath') is None:
+            datasets.append(CollectionDataset(ds, catalog))
+        else:
+            datasets.append(DirectDataset(ds, catalog))
+    return datasets
+
+
+def skip_pattern(skip=None):
+    # Skip these dataset links, such as a list of files
+    # ie. "files/"
+    import re
+    if skip is None:
+        skip = SKIPS
+    skip = map(lambda x: re.compile(x), skip)
+    return skip
 
 
 class Catalog:
-    "A Thredds catalog entry"
-    def __init__(self):
-        self.name = ""
-        self.services = []
-        self.references = []
-        self.datasets = []
+    """
+    A Thredds catalog
+
+    TODO: use serverInfo to get harvest information
+    http://www.esrl.noaa.gov/psd/thredds/serverInfo.xml
+    """
+    def __init__(self, soup, url, skip=None):
+        self.soup = soup
+        self.url = url
+        self.skip = skip_pattern(skip)
+        self._services = None
+        self._references = None
+        self._datasets = None
+
+    @property
+    def name(self):
+        name = self.soup.get('name')
+        if not name and len(self.datasets) > 0:
+            name = self.datasets[0].name
+        if name:
+            name = name.strip()
+        return name
+
+    @property
+    def services(self):
+        if not self._services:
+            from .nodes import Service
+            self._services = [Service(x, self) for x in self.soup.find_all('service', recursive=False)]
+        return self._services
+
+    @property
+    def references(self):
+        if not self._references:
+            self._references = find_references(self.soup, self)
+        return self._references
+
+    @property
+    def datasets(self):
+        if not self._datasets:
+            self._datasets = find_datasets(self.soup, self)
+        return self._datasets
+
+    def flat_datasets(self):
+        return flat_datasets(self.datasets)
+
+    def flat_references(self):
+        flat_refs = []
+        flat_refs.extend(self.references)
+        flat_refs.extend(flat_references(self.datasets))
+        return flat_refs
+
+    def get_services(self, service_name):
+        services = []
+        for service in self.services:
+            if service.name == service_name:
+                if service.service_type == 'Compound':
+                    services.extend(service.services)
+                else:
+                    services.append(service)
+        return services
+
+    def download_urls(self):
+        urls = []
+        for dataset in self.flat_datasets():
+            urls.append(dataset.download_url())
+        return urls
+
+    def opendap_urls(self):
+        urls = []
+        for dataset in self.flat_datasets():
+            urls.append(dataset.opendap_url())
+        return urls
