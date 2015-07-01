@@ -1,14 +1,16 @@
 import requests
 
-import logging
-logger = logging.getLogger(__name__)
-
-
 def download_urls(url, skip=None, **kwargs):
+    """
+    Returns a list of file download urls listed in the catalog at `url`
+    """
     return read_url(url, skip, **kwargs).download_urls()
 
 
 def opendap_urls(url, skip=None, **kwargs):
+    """
+    Returns a list of OpenDAP urls listed in the catalog at `url`
+    """
     return read_url(url, skip, **kwargs).opendap_urls()
 
 

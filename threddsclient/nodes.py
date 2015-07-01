@@ -1,5 +1,5 @@
 """
-A Python view of a Thredds data server
+Python objects for modelling a Thredds server
 """
 
 from bs4 import BeautifulSoup as BSoup
