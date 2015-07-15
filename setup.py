@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from setuptools import find_packages
 from setuptools import setup
 
 
@@ -13,12 +14,13 @@ def changes():
 
 
 setup(name             = 'threddsclient',
-      version          = '0.3.1',
+      version          = '0.3.2',
       description      = 'Thredds catalog client',
       long_description = readme() + '/n/n' + changes(),
       author	       = 'Birdhouse',
       license          = 'Apache 2.0',
-      packages         = ['threddsclient'],
+      packages=find_packages(),
+      include_package_data=True,
       zip_safe         = False,
       install_requires =
       ['requests',

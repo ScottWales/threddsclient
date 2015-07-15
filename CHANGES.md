@@ -1,6 +1,11 @@
 Changes
 -------
 
+### 0.3.2 (2015-07-15)
+
+* append catalog.xml to catalog url if missing
+* crawl method added
+
 ### 0.3.1 (2015-06-14)
 
 * fixed catalog.follow()
