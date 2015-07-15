@@ -4,12 +4,14 @@ def fix_catalog_url(url):
     """
     Replace .html with .xml extension
     """
-    from os.path import splitext
+    from os.path import splitext, join
 
     u = urlparse.urlsplit(url)
     name, ext = splitext(u.path)
     if ext == ".html":
         u = urlparse.urlsplit(url.replace(".html", ".xml"))
+    elif ext == '':
+        u = urlparse.urlsplit(join(url, "catalog.xml"))
     return u.geturl()
 
 
