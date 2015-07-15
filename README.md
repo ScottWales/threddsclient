@@ -89,6 +89,17 @@ Get flat list of all references in the catalog
     references = cat.flat_references()
 ```
 
+### Crawl thredds catalog
+
+Crawl recursive all direct datasets in catalog following the catalog references. Stop recusion at a given depth level. 
+
+```python
+   import threddsclient
+   for ds in threddsclient.crawl('http://example.com/thredds/catalog.xml', depth=2):
+       print ds.name
+   
+```
+
 ## Examples with IPython Notebook
 
 * [NOAA Thredds Catalog](http://nbviewer.ipython.org/github/bird-house/threddsclient/blob/master/examples/noaa_example.ipynb)
