@@ -1,16 +1,16 @@
 # Thredds Client for Python
 
 [![Travis Build](https://travis-ci.org/bird-house/threddsclient.svg?branch=master)](https://travis-ci.org/bird-house/threddsclient)
-[![Install with Conda](https://binstar.org/birdhouse/threddsclient/badges/installer/conda.svg)](https://binstar.org/birdhouse/threddsclient)
-![License](https://binstar.org/birdhouse/threddsclient/badges/license.svg)
+[![Install with Conda](https://anaconda.org/birdhouse/threddsclient/badges/installer/conda.svg)](https://anaconda.org/birdhouse/threddsclient)
+![License](https://anaconda.org/birdhouse/threddsclient/badges/license.svg)
 
 ## Installing Thredds Client
 
 ### Anaconda
 
-[![Binstar Build](https://binstar.org/birdhouse/threddsclient/badges/build.svg)](https://binstar.org/birdhouse/threddsclient)
-![Version](https://binstar.org/birdhouse/threddsclient/badges/version.svg)
-![Downloads](https://binstar.org/birdhouse/threddsclient/badges/downloads.svg)
+[![Binstar Build](https://anaconda.org/birdhouse/threddsclient/badges/build.svg)](https://anaconda.org/birdhouse/threddsclient)
+![Version](https://anaconda.org/birdhouse/threddsclient/badges/version.svg)
+![Downloads](https://anaconda.org/birdhouse/threddsclient/badges/downloads.svg)
 
 Thredds client is available as Anaconda package. Install it with the following command:
 
