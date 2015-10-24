@@ -1,10 +1,7 @@
 Thredds Client for Python
 =========================
 
-.. image:: https://travis-ci.org/bird-house/threddsclient.svg?branch=master
-   :target: https://travis-ci.org/bird-house/threddsclient
-   :alt: Travis Build
-
+|Travis Build| |Install with Conda| |License|
 
 Installing Thredds Client
 -------------------------
