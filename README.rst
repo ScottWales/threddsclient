@@ -1,7 +1,7 @@
 Thredds Client for Python
 =========================
 
-|Travis Build| |Install with Conda| |License|
+|Travis Build| |Install with Conda|
 
 Installing Thredds Client
 -------------------------
