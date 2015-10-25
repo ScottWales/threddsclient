@@ -12,6 +12,7 @@ def changes():
     with open('CHANGES.rst') as f:
         return f.read()
 
+reqs = [line.strip() for line in open('requirements.txt')]
 
 setup(name             = 'threddsclient',
       version          = '0.3.3',
@@ -23,10 +24,5 @@ setup(name             = 'threddsclient',
       packages=find_packages(),
       include_package_data=True,
       zip_safe         = False,
-      install_requires =
-      ['requests',
-       'beautifulsoup4',
-       'lxml',
-       'pytest',
-       ],
+      install_requires = reqs,
       )
