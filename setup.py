@@ -15,7 +15,7 @@ def changes():
 reqs = [line.strip() for line in open('requirements.txt')]
 
 setup(name             = 'threddsclient',
-      version          = '0.3.3',
+      version          = '0.3.4',
       description      = 'Thredds catalog client',
       long_description = readme() + '/n/n' + changes(),
       author	       = 'Birdhouse',

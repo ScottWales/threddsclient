@@ -1,13 +1,14 @@
+=========================
 Thredds Client for Python
 =========================
 
 |Travis Build| |Install with Conda|
 
 Installing Thredds Client
--------------------------
+=========================
 
 Anaconda
-~~~~~~~~
+--------
 
 |Binstar Build| |Version| |Downloads|
 
@@ -19,7 +20,7 @@ following command:
     $ conda install -c birdhouse threddsclient
 
 From github
-~~~~~~~~~~~
+-----------
 
 Prepare a conda environment with the Python dependencies and activate
 it:
@@ -38,13 +39,13 @@ Clone the threddslclient github repo and install the Python module:
     $ python setup.py develop
 
 Using Thredds Client
---------------------
+====================
 
 Read the Thredds tutorial on catalogs: `Thredds Catalog
 Primer <http://www.unidata.ucar.edu/software/thredds/current/tds/tutorial/CatalogPrimer.html>`__
 
 Get download URLs of a catalog
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------
 
 .. code:: python
 
@@ -52,7 +53,7 @@ Get download URLs of a catalog
         urls = threddsclient.download_urls('http://example.com/thredds/catalog.xml')
 
 Get OpenDAP URLs of a catalog
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------
 
 .. code:: python
 
@@ -60,7 +61,7 @@ Get OpenDAP URLs of a catalog
         urls = threddsclient.opendap_urls('http://example.com/thredds/catalog.xml')
 
 Navigate in catalog
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 Start reading a catalog
 
@@ -97,7 +98,7 @@ Get flat list of all references in the catalog
         references = cat.flat_references()
 
 Crawl thredds catalog
-~~~~~~~~~~~~~~~~~~~~~
+---------------------
 
 Crawl recursive all direct datasets in catalog following the catalog
 references. Stop recusion at a given depth level.
@@ -110,7 +111,7 @@ references. Stop recusion at a given depth level.
        
 
 Examples with IPython Notebook
-------------------------------
+==============================
 
 -  `NOAA Thredds
    Catalog <http://nbviewer.ipython.org/github/bird-house/threddsclient/blob/master/examples/noaa_example.ipynb>`__
@@ -120,7 +121,10 @@ Examples with IPython Notebook
 .. |Install with Conda| image:: https://anaconda.org/birdhouse/threddsclient/badges/installer/conda.svg
    :target: https://anaconda.org/birdhouse/threddsclient
 .. |License| image:: https://anaconda.org/birdhouse/threddsclient/badges/license.svg
+   :target: https://anaconda.org/birdhouse/threddsclient
 .. |Binstar Build| image:: https://anaconda.org/birdhouse/threddsclient/badges/build.svg
    :target: https://anaconda.org/birdhouse/threddsclient
 .. |Version| image:: https://anaconda.org/birdhouse/threddsclient/badges/version.svg
+   :target: https://anaconda.org/birdhouse/threddsclient
 .. |Downloads| image:: https://anaconda.org/birdhouse/threddsclient/badges/downloads.svg
+   :target: https://anaconda.org/birdhouse/threddsclient
