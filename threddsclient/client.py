@@ -1,5 +1,6 @@
 import requests
 
+
 def download_urls(url, skip=None, **kwargs):
     """
     Returns a list of file download urls listed in the catalog at `url`
@@ -20,8 +21,8 @@ def crawl(url, skip=None, depth=0, **kwargs):
     Recursion will stop at level `depth`. Returns each found dataset.
 
     :param str url:     URL pointing to a Thredds catalog.xml file
-    :param int depth:   Depth level at which recursion should stop. Default: 0. 
-    
+    :param int depth:   Depth level at which recursion should stop. Default: 0.
+
     :rtype Dataset
     """
     cat = read_url(url, skip, **kwargs)
@@ -29,10 +30,10 @@ def crawl(url, skip=None, depth=0, **kwargs):
         yield ds
     if depth > 0:
         for ref in cat.flat_references():
-            for ds in crawl(ref.url, skip, depth-1,  **kwargs):
+            for ds in crawl(ref.url, skip, depth - 1, **kwargs):
                 yield ds
 
-   
+
 def read_url(url, skip=None, **kwargs):
     """
     Create a Catalog from a Thredds catalog link

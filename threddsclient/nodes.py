@@ -3,7 +3,7 @@ Python objects for modelling a Thredds server
 """
 
 from bs4 import BeautifulSoup as BSoup
-import urlparse
+from six.moves.urllib import parse as urlparse
 from .utils import size_in_bytes
 
 import logging
@@ -120,10 +120,10 @@ class Dataset(Node):
     def data_format_type(self):
         data_format_type = None
         if self.soup.dataFormatType:
-            data_format_type = soup.dataFormatType.text
+            data_format_type = self.soup.dataFormatType.text
         elif self.soup.metadata:
             if self.soup.metadata.dataFormatType:
-                data_type = self.soup.metadata.dataFormatType.text
+                data_format_type = self.soup.metadata.dataFormatType.text
         elif self.soup.parent.metadata:
             if self.soup.parent.metadata.dataFormatType:
                 data_format_type = self.soup.parent.metadata.dataFormatType.text
@@ -198,6 +198,6 @@ class DirectDataset(Dataset):
                 datasize = float(soup.dataSize.text)
                 units = soup.dataSize.get('units')
                 size = size_in_bytes(datasize, units)
-            except:
+            except Exception:
                 logger.exception("dataset size conversion failed")
         return size

@@ -1,6 +1,8 @@
+import requests
+
 import pytest
 
-from threddsclient import *
+from threddsclient import read_xml, read_url
 
 
 def test_tpac():
@@ -10,14 +12,14 @@ def test_tpac():
 
 def test_invalid_url():
     with pytest.raises(requests.ConnectionError):
-        cat = read_url('http://example.invalid')
+        read_url('http://example.invalid')
 
 
 def test_null():
     xml = """
     """
     with pytest.raises(ValueError):
-        cat = read_xml(xml, 'http://example.test')
+        read_xml(xml, 'http://example.test')
 
 
 def test_empty():

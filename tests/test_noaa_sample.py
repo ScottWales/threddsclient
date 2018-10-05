@@ -4,12 +4,12 @@ Testing xml sample from noaa catalog: http://www.esrl.noaa.gov/psd/thredds/catal
 
 import pytest
 
-from threddsclient import *
+from threddsclient import read_xml
 
 
 def test_noaa_catalog():
     xml = """
-    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" name="THREDDS PSD Test Catalog" version="1.0.1">
+    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" name="THREDDS PSD Test Catalog" version="1.0.1">  # noqa
       <service name="all" serviceType="Compound" base="">
         <service name="odap" serviceType="OPENDAP" base="/psd/thredds/dodsC/" />
         <service name="http" serviceType="HTTPServer" base="/psd/thredds/fileServer/" />
@@ -42,7 +42,7 @@ def test_noaa_catalog():
 
 def test_noaa_datasets():
     xml = """
-    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">
+    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">  # noqa
       <service name="all" serviceType="Compound" base="">
         <service name="odap" serviceType="OPENDAP" base="/psd/thredds/dodsC/" />
         <service name="http" serviceType="HTTPServer" base="/psd/thredds/fileServer/" />
@@ -73,7 +73,7 @@ def test_noaa_datasets():
 
 def test_noaa_datasets_dailyavgs():
     xml = """
-    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">
+    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">  # noqa
       <service name="all" serviceType="Compound" base="">
         <service name="odap" serviceType="OPENDAP" base="/psd/thredds/dodsC/" />
         <service name="http" serviceType="HTTPServer" base="/psd/thredds/fileServer/" />
@@ -109,7 +109,7 @@ def test_noaa_datasets_dailyavgs():
 
 def test_noaa_datasets_dailyavg_surface():
     xml = """
-    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">
+    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">  # noqa
       <service name="all" serviceType="Compound" base="">
         <service name="odap" serviceType="OPENDAP" base="/psd/thredds/dodsC/" />
         <service name="http" serviceType="HTTPServer" base="/psd/thredds/fileServer/" />
@@ -159,14 +159,20 @@ def test_noaa_datasets_dailyavg_surface():
     assert cat.datasets[0].datasets[0].bytes == 7706000
     assert cat.datasets[0].datasets[0].data_type == 'GRID'
     assert cat.datasets[0].datasets[0].service_name == 'all'
-    assert cat.datasets[0].datasets[0].url == "http://example.test/catalog.xml?dataset=Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc"
-    assert cat.datasets[0].datasets[0].download_url() == 'http://example.test/psd/thredds/fileServer/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc'
-    assert cat.datasets[0].datasets[0].opendap_url() == 'http://example.test/psd/thredds/dodsC/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc'
-    assert cat.datasets[0].datasets[0].wms_url() == 'http://example.test/psd/thredds/wms/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc'
+    assert cat.datasets[0].datasets[0].url == \
+        "http://example.test/catalog.xml?dataset=Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc"
+    assert cat.datasets[0].datasets[0].download_url() == \
+        'http://example.test/psd/thredds/fileServer/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc'
+    assert cat.datasets[0].datasets[0].opendap_url() == \
+        'http://example.test/psd/thredds/dodsC/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc'
+    assert cat.datasets[0].datasets[0].wms_url() == \
+        'http://example.test/psd/thredds/wms/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1980.nc'
     assert cat.datasets[0].datasets[0].content_type == 'application/netcdf'
     assert len(cat.download_urls()) == 5
-    assert cat.download_urls()[1] == "http://example.test/psd/thredds/fileServer/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1981.nc"
+    assert cat.download_urls()[1] == \
+        "http://example.test/psd/thredds/fileServer/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1981.nc"
     assert len(cat.opendap_urls()) == 5
-    assert cat.opendap_urls()[2] == "http://example.test/psd/thredds/dodsC/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1982.nc"
+    assert cat.opendap_urls()[2] == \
+        "http://example.test/psd/thredds/dodsC/Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1982.nc"
     assert len(cat.flat_datasets()) == 5
     assert len(cat.flat_references()) == 0

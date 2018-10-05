@@ -1,6 +1,6 @@
 import pytest
 
-from threddsclient import *
+from threddsclient import read_xml
 
 
 def test_unidata_sample_1():
@@ -46,7 +46,7 @@ def test_unidata_sample_3():
 def test_noaa_sample_1():
     xml = """
     <catalog>
-      <dataset name="mslp.1979.nc" ID="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1979.nc" urlPath="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1979.nc">
+      <dataset name="mslp.1979.nc" ID="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1979.nc" urlPath="Datasets/ncep.reanalysis2.dailyavgs/surface/mslp.1979.nc">  # noqa
         <dataSize units="Mbytes">7.685</dataSize>
         <date type="modified">2011-06-14T00:17:11Z</date>
         <metadata inherited="true">
