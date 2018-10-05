@@ -1,22 +1,26 @@
-import urlparse
+import os
+from six.moves.urllib import parse as urlparse
+
 
 def fix_catalog_url(url):
     """
     Replace .html with .xml extension
     """
-    from os.path import splitext
+    from os.path import splitext, join
 
     u = urlparse.urlsplit(url)
     name, ext = splitext(u.path)
     if ext == ".html":
         u = urlparse.urlsplit(url.replace(".html", ".xml"))
+    elif ext == '':
+        u = urlparse.urlsplit(join(url, "catalog.xml"))
     return u.geturl()
 
 
 def construct_url(url, href):
     u = urlparse.urlsplit(url)
     base_url = u.scheme + "://" + u.netloc
-    relative_path = urlparse.urljoin(base_url,os.path.split(u.path)[0])
+    relative_path = urlparse.urljoin(base_url, os.path.split(u.path)[0])
 
     if href[0] == "/":
         # Absolute paths

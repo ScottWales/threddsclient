@@ -1,1 +1,4 @@
-README.md
+include *.rst *.txt
+graft threddsclient
+graft tests
+global-exclude *.pyc *.*~

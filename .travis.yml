@@ -1,11 +1,14 @@
 language: python
 python:
   - "2.7"
+  - "3.6"
+sudo: false
 install:
- - sudo apt-get install python-lxml
- - python setup.py install
- - pip install pytest-pep8 pytest-cov python-coveralls
+  - pip install -r requirements.txt
+  - pip install -r requirements-dev.txt
+  - python setup.py install
 script:
- - py.test -v tests --cov threddsclient --cov-report term-missing
+  - py.test -v tests --cov threddsclient --cov-report term-missing
+  - flake8
 after_success:
- - coveralls
+  - coveralls

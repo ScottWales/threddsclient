@@ -1,11 +1,11 @@
 import pytest
 
-from threddsclient import *
+from threddsclient import read_xml
 
 
 def test_birdhouse_root():
     xml = """
-    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" name="THREDDS Server Default Catalog" version="1.0.1">
+    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" name="THREDDS Server Default Catalog" version="1.0.1">  # noqa
       <service name="all" serviceType="Compound" base="">
         <service name="service4" serviceType="HTTPServer" base="/thredds/fileServer/" />
         <service name="odap" serviceType="OPENDAP" base="/thredds/dodsC/" />
@@ -33,7 +33,7 @@ def test_birdhouse_root():
 
 def test_birdhouse_top():
     xml = """
-    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">
+    <catalog xmlns="http://www.unidata.ucar.edu/namespaces/thredds/InvCatalog/v1.0" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.0.1">  # noqa
       <service name="all" serviceType="Compound" base="">
         <service name="service4" serviceType="HTTPServer" base="/thredds/fileServer/" />
         <service name="odap" serviceType="OPENDAP" base="/thredds/dodsC/" />
