@@ -1,6 +1,10 @@
 Changes
 *******
 
+0.3.5 (2018-10-05)
+==================
+
+* support for Python 3.x (#1)
 
 0.3.4 (2015-10-25)
 ==================
@@ -12,7 +16,7 @@ Changes
 ==================
 
 * converted docs to rst.
-* MANIFEST.in added.  
+* MANIFEST.in added.
 
 0.3.2 (2015-07-15)
 ==================
