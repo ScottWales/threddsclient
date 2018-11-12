@@ -39,7 +39,7 @@ def read_url(url, skip=None, **kwargs):
     Create a Catalog from a Thredds catalog link
 
     :param str url:     URL pointing to a Thredds catalog.xml file
-    :param \**kwargs:   Arguments to pass to requests.get()
+    :param **kwargs:    Arguments to pass to requests.get()
                         (e.g. for authentication)
     :rtype Catalog
 
