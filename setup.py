@@ -2,8 +2,9 @@
 
 from setuptools import find_packages
 from setuptools import setup
+import re
 
-version = __import__('threddsclient').__version__
+version = re.search(r'__version__ = (.+)\n', open('threddsclient/__init__.py').read()).group(1)
 long_description = (
     open('README.rst').read() + '\n' + open('AUTHORS.rst').read() + '\n' + open('CHANGES.rst').read()
 )
