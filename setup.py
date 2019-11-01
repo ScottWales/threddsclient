@@ -4,7 +4,7 @@ from setuptools import find_packages
 from setuptools import setup
 import re
 
-version = re.search(r'__version__ = (.+)\n', open('threddsclient/__init__.py').read()).group(1)
+version = re.search(r'__version__ = [\'"](.+)[\'"]\n?', open('threddsclient/__init__.py').read()).group(1)
 long_description = (
     open('README.rst').read() + '\n' + open('AUTHORS.rst').read() + '\n' + open('CHANGES.rst').read()
 )
