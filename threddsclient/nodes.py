@@ -3,7 +3,7 @@ Python objects for modelling a Thredds server
 """
 
 from bs4 import BeautifulSoup as BSoup
-from six.moves.urllib import parse as urlparse
+from urllib import parse as urlparse
 from .utils import size_in_bytes
 
 import logging

@@ -1,5 +1,5 @@
 import os
-from six.moves.urllib import parse as urlparse
+from urllib import parse as urlparse
 
 
 def fix_catalog_url(url):
