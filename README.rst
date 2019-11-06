@@ -107,7 +107,7 @@ Development
 ===========
 
 Install sources
-===============
+---------------
 
 Check out code from the birdy GitHub repo and start the installation:
 
@@ -125,7 +125,7 @@ Install additional dependencies::
   $ pip install -r requirements_dev.txt
 
 Bump a new version
-===================
+------------------
 
 Make a new version of Birdy in the following steps:
 
@@ -141,7 +141,7 @@ See the bumpversion_ documentation for details.
 .. _bumpversion: https://pypi.org/project/bumpversion/
 
 Examples with IPython Notebook
-==============================
+------------------------------
 
 -  `NOAA Thredds
    Catalog <http://nbviewer.ipython.org/github/bird-house/threddsclient/blob/master/examples/noaa_example.ipynb>`__
