@@ -158,7 +158,7 @@ class Catalog:
         services = []
         for service in self.services:
             if service.name == service_name:
-                if service.service_type == 'Compound':
+                if service.service_type.lower() == 'Compound'.lower():
                     services.extend(service.services)
                 else:
                     services.append(service)
