@@ -10,27 +10,49 @@ Installing Thredds Client
 Anaconda
 --------
 
-|Version| |Downloads|
+|Version-GitHub| |Version-Anaconda| |Version-PyPI| |Downloads|
 
 Thredds client is available as Anaconda package. Install it with the
 following command:
 
-.. code:: bash
+.. code-block:: bash
 
-    $ conda install -c conda-forge threddsclient
+    conda install -c conda-forge threddsclient
 
-From github
+From PyPI
+---------
+
+Thredds Client is available from PyPI to install directly with ``pip`` or ``poetry``.
+
+.. code-block:: bash
+
+    pip install threddsclient
+
+
+.. code-block:: bash
+
+    poetry add threddsclient
+
+
+From GitHub
 -----------
 
 Check out code from the birdy GitHub repo and start the installation:
 
-.. code:: bash
+.. code-block:: bash
 
-    $ git clone https://github.com/bird-house/threddsclient.git
-    $ cd threddsclient
-    $ conda env create -f environment.yml
-    $ source activate threddsclient
-    $ python setup.py develop
+    git clone https://github.com/bird-house/threddsclient.git
+    cd threddsclient
+    conda env create -f environment.yml
+    source activate threddsclient
+    python setup.py develop
+
+Alternatively, you can also install it directly with ``pip`` using a virtual environment of your choice:
+
+.. code-block:: bash
+
+    pip install "threddsclient @ git+https://github.com/bird-house/threddsclient.git"
+
 
 Using Thredds Client
 ====================
@@ -41,7 +63,7 @@ Primer <http://www.unidata.ucar.edu/software/thredds/current/tds/tutorial/Catalo
 Get download URLs of a catalog
 ------------------------------
 
-.. code:: python
+.. code-block:: python
 
         import threddsclient
         urls = threddsclient.download_urls('http://example.com/thredds/catalog.xml')
@@ -49,7 +71,7 @@ Get download URLs of a catalog
 Get OpenDAP URLs of a catalog
 -----------------------------
 
-.. code:: python
+.. code-block:: python
 
         import threddsclient
         urls = threddsclient.opendap_urls('http://example.com/thredds/catalog.xml')
@@ -59,14 +81,14 @@ Navigate in catalog
 
 Start reading a catalog
 
-.. code:: python
+.. code-block:: python
 
         import threddsclient
         cat = threddsclient.read_url('http://example.com/thredds/catalog.xml')
 
 Get a list of references to other catalogs & follow them
 
-.. code:: python
+.. code-block:: python
 
         refs = cat.references
 
@@ -75,19 +97,19 @@ Get a list of references to other catalogs & follow them
 
 Get a list of datasets in this catalog
 
-.. code:: python
+.. code-block:: python
 
         data  = cat.datasets
 
 Get flat list of all direct datasets (data files) in the catalog
 
-.. code:: python
+.. code-block:: python
 
         datasets = cat.flat_datasets()
 
 Get flat list of all references in the catalog
 
-.. code:: python
+.. code-block:: python
 
         references = cat.flat_references()
 
@@ -95,9 +117,9 @@ Crawl thredds catalog
 ---------------------
 
 Crawl recursive all direct datasets in catalog following the catalog
-references. Stop recusion at a given depth level.
+references. Stop recursion at a given depth level.
 
-.. code:: python
+.. code-block:: python
 
        import threddsclient
        for ds in threddsclient.crawl('http://example.com/thredds/catalog.xml', depth=2):
@@ -113,16 +135,18 @@ Check out code from the birdy GitHub repo and start the installation:
 
 .. code-block:: sh
 
-   $ git clone https://github.com/bird-house/threddsclient.git
-   $ cd threddsclient
-   $ conda env create -f environment.yml
-   $ python setup.py develop
+   git clone https://github.com/bird-house/threddsclient.git
+   cd threddsclient
+   conda env create -f environment.yml
+   python setup.py develop
 
-Install additional dependencies::
+Install additional dependencies:
 
-  $ conda install pytest flake8 sphinx bumpversion
-  OR
-  $ pip install -r requirements_dev.txt
+.. code-block:: sh
+
+    conda install pytest flake8 sphinx bumpversion
+    # OR
+    pip install -r requirements_dev.txt
 
 Bump a new version
 ------------------
@@ -154,7 +178,11 @@ Examples with IPython Notebook
    :target: https://anaconda.org/conda-forge/threddsclient
 .. |Join the Chat| image:: https://badges.gitter.im/bird-house/birdhouse.svg
    :target: https://gitter.im/bird-house/birdhouse?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
-.. |Version| image:: https://anaconda.org/conda-forge/threddsclient/badges/version.svg
+.. |Version-GitHub| image:: https://img.shields.io/github/v/release/bird-house/threddsclient?label=GitHub
+   :target: https://github.com/bird-house/threddsclient/releases
+.. |Version-Anaconda| image:: https://anaconda.org/conda-forge/threddsclient/badges/version.svg
    :target: https://anaconda.org/conda-forge/threddsclient
+.. |Version-PyPI| image:: https://img.shields.io/pypi/v/threddsclient?color=blue
+   :target: https://pypi.org/project/threddsclient/
 .. |Downloads| image:: https://anaconda.org/conda-forge/threddsclient/badges/downloads.svg
    :target: https://anaconda.org/conda-forge/threddsclient
