@@ -1,0 +1,68 @@
+name: threddsclient Testing Suite
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  # see: https://github.com/fkirc/skip-duplicate-actions
+  skip_duplicate:
+    name: Skip Duplicate Actions
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          concurrent_skipping: "same_content"
+          skip_after_successful_duplicate: "true"
+          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
+
+  # see: https://github.com/actions/setup-python
+  tests:
+    needs: skip_duplicate
+    name: ${{ matrix.test-case }} (Python${{ matrix.python-version }}; ${{ matrix.os }})
+    if: ${{ needs.skip_duplicate.outputs.should_skip != 'true' }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version:
+        - "3.7"
+        - "3.8"
+        - "3.9"
+        - "3.10"
+        - "3.11"
+        test-case: [tests]
+        include:
+          - os: ubuntu-20.04
+            python-version: "3.6"
+            test-case: tests
+          - os: ubuntu-latest
+            python-version: "3.10"
+            test-case: linting
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: "0"
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "${{ matrix.python-version }}"
+      - name: Install Dependencies and threddsclient
+        run: |
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+          python setup.py install
+      - name: Display Packages
+        run: pip freeze
+      - if: ${{ matrix.test-case == 'linting' }}
+        name: Run Linting Checks
+        run: flake8
+      - if: ${{ matrix.test-case == 'tests' }}
+        name: Run Tests
+        run: py.test -v tests
