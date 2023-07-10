@@ -5,6 +5,8 @@ Changes
 Unreleased
 ==================
 
+* add shield badges for PyPI and GitHub releases
+* fix rendering of code blocks in ``README.rst``
 * add missing classifiers and python requirements to ``setup.py`` to allow validators to detect appropriate versions
 * add python 3.9, 3.10 and 3.11 to the supported versions in ``setup.py`` and validate them in GitHub CI
 * drop Travis CI configuration in favor of GitHub CI
