@@ -5,6 +5,9 @@ Changes
 Unreleased
 ==================
 
+0.4.4 (2023-07-10)
+==================
+
 * add shield badges for PyPI and GitHub releases
 * fix rendering of code blocks in ``README.rst``
 * add missing classifiers and python requirements to ``setup.py`` to allow validators to detect appropriate versions
